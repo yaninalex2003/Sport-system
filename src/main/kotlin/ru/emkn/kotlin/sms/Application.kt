@@ -12,9 +12,6 @@ typealias Participant = Map<String, String>
 typealias ParticipantsList = MutableList<Participant>
 typealias GroupsMap = MutableMap<GroupName, ParticipantsList>
 
-fun main() {
-    Application().create()
-}
 
 class Application {
     private val groups: GroupsMap
