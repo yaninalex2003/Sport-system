@@ -8,13 +8,13 @@ class Sportsman(var name: String, var surname: String) {
 
     var birthday: Int = 0
 
-    lateinit var group: String
+    lateinit var groupName: String
 
     var number: Int = 0
 
     var times = mutableListOf<String>()
 
-    var finishTime = times.last()
+    lateinit var finishTime: String
 
-    var finishTimeInSeconds = timeToSeconds(finishTime)
+    var finishTimeInSeconds: Int = 0
 }

@@ -8,13 +8,20 @@ import java.io.File
 import java.lang.StringBuilder
 
 fun main(args: Array<String>) {
-    val files = readData()
-    val people = getGroup(files)
-    val groups = people.groupBy { it.group }
-    getStartProtocols(groups)
+    println("Введите ''Стартовый протокол'' или ''Финишный протокол''")
+    val whatNeedToDo = readLine()
+    val groups: Map<String, List<Sportsman>>
+    if (whatNeedToDo == "Стартовый протокол") {
+        val files = readData()
+        val people = getSportsmen(files)
+        groups = people.groupBy { it.groupName }
+        getStartProtocols(groups)
+    }
+    if (whatNeedToDo == "Финишный протокол") {
+        val groupForFinish = makeGroupClassForFinishResults()
+        getFinishResults(groupForFinish)
+    }
 
-    val groupForFinish = makeGroupClassForFinishResults(groups)
-    getFinishResults(groupForFinish)
 }
 
 fun readData(): List<File> {
@@ -29,7 +36,8 @@ fun readData(): List<File> {
     return ans
 }
 
-fun getGroup(files: List<File>): List<Sportsman> {
+//Создает спортсменов
+fun getSportsmen(files: List<File>): List<Sportsman> {
     val people: MutableList<Sportsman> = mutableListOf()
     for (file in files) {
         val reader = file.bufferedReader()
@@ -40,7 +48,7 @@ fun getGroup(files: List<File>): List<Sportsman> {
                 .withTrim()
         )
         csvParser.forEach {
-            people.add(makeSportsman(it, team))
+            if (it.get(0) != "Группа") people.add(makeSportsman(it, team))
         }
     }
     return people
@@ -63,7 +71,7 @@ fun makeSportsman(line: CSVRecord, team: String): Sportsman {
     val name = line.get(1)
     val surname = line.get(2)
     val newSportsman = Sportsman(name, surname)
-    newSportsman.group = line.get(0)
+    newSportsman.groupName = line.get(0)
     newSportsman.birthday = line.get(3).toInt()
     newSportsman.team = team
     newSportsman.rank = line.get(4)
@@ -84,7 +92,15 @@ fun getStartProtocols(groups: Map<String, List<Sportsman>>) {
         var number = 0
         for (person in people) {
             person.number = number + 1
-            csvPrinter.printRecord(listOf(person.number, person.surname, person.name, person.rank, timeToString(number)))
+            csvPrinter.printRecord(
+                listOf(
+                    person.number,
+                    person.surname,
+                    person.name,
+                    person.rank,
+                    timeToString(number)
+                )
+            )
             number += 1
         }
         csvPrinter.flush()
@@ -92,14 +108,19 @@ fun getStartProtocols(groups: Map<String, List<Sportsman>>) {
     }
 }
 
-fun makeGroupClassForFinishResults(groups: Map<String, List<Sportsman>>): Group {
+fun makeGroupClassForFinishResults(): Group {
     println("Введите название файла, хранящего стартовый протокол группы")
     val startFileName = readLine()!!
-    val ans = Group(File(startFileName))
     val reader = File(startFileName).bufferedReader()
-    ans.name = reader.readLine().split(",")[0]
-    var a = groups[ans.name]?.groupBy { it.number }
-    ans.sportsmen = groups[ans.name]!!
+    val ans = Group(reader.readLine().split(",")[0])
+    val csvParser = CSVParser(
+        reader, CSVFormat.DEFAULT
+            .withIgnoreHeaderCase()
+            .withTrim()
+    )
+    csvParser.forEach{
+        ans.sportsmen.add(makeSportsman(it, ans.name))
+    }
 
     println("Для каждого участника введите название файла содержащего данные о прохождении контрольных пунктов")
     for (i in 1..ans.size) {
@@ -122,6 +143,8 @@ fun getFinishResults(finish: Group) {
         csvParser.forEach {
             person.times.add(it.get(1))
         }
+        person.finishTime = person.times.last()
+        person.finishTimeInSeconds = timeToSeconds(person.finishTime)
     }
     finish.sportsmen.sortedBy { it.finishTimeInSeconds }.reversed()
     val file =
