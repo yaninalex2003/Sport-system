@@ -20,11 +20,12 @@ fun main(args: Array<String>) {
     if (whatNeedToDo == "Финишный протокол") {
         val groupForFinish = makeGroupClassForFinishResults()
         getFinishResults(groupForFinish)
+        getTeamResults(groupForFinish)
     }
 
 }
 
-//Запрашивает у пользователя файлы с дынными
+//Запрашивает у пользователя файлы с данными
 fun readData(): List<File> {
     val ans = mutableListOf<File>()
     println("Введите количество спортивных коллективов")
@@ -86,7 +87,7 @@ fun getStartProtocols(groups: Map<String, List<Sportsman>>) {
     for (oneGroup in groups.keys) {
         val people = groups[oneGroup]!!
         val file =
-            File("C:\\Users\\79068\\IdeaProjects\\oop-2021-sport-management-system-yanix\\groups_for _start\\$oneGroup")
+            File("./groups_for _start\\$oneGroup")
         val writer = file.bufferedWriter()
         val csvPrinter = CSVPrinter(
             writer, CSVFormat.DEFAULT
@@ -168,7 +169,7 @@ fun getFinishResults(finish: Group) {
     }
     finish.sportsmen = finish.sportsmen.sortedBy { it.finishTimeInSeconds }.toMutableList()
     val file =
-        File("C:\\Users\\79068\\IdeaProjects\\oop-2021-sport-management-system-yanix\\finish_results\\group_${finish.name}")
+        File("./finish_results\\group_${finish.name}")
     val writer = file.bufferedWriter()
     val csvPrinter = CSVPrinter(
         writer, CSVFormat.DEFAULT
@@ -193,16 +194,17 @@ fun getFinishResults(finish: Group) {
     csvPrinter.close()
 }
 
+//Вроде должна создавать файлы с результатами команд
 fun getTeamResults(finish:Group){
     val winnerTime=timeToSeconds(finish.sportsmen.sortedBy{timeToSeconds(it.finishTime)}[0].finishTime)
-    val result=finish.sportsmen.groupBy{it.groupName}
+    val result=finish.sportsmen.groupBy{it.team}
     for (i in result.keys){
         val file =
-            File("C:\\Users\\79068\\IdeaProjects\\oop-2021-sport-management-system-yanix\\team_results\\group_${i}_result")
+            File("./team_results\\${i}_result")
         val writer = file.bufferedWriter()
         val csvPrinter = CSVPrinter(
             writer, CSVFormat.DEFAULT
-                .withHeader("${i}_result", "", "", "", "", "", "")
+                .withHeader("${i}", "", "", "", "", "", "")
         )
         var number = 1
         for (person in result[i]!!) {
@@ -213,7 +215,7 @@ fun getTeamResults(finish:Group){
                     person.surname,
                     person.name,
                     person.rank,
-                    maxOf(0,2-timeToSeconds(person.finishTime)/winnerTime)
+                    maxOf(0,(100*(2F-timeToSeconds(person.finishTime)/winnerTime.toFloat())).toInt())
                 )
             )
             number += 1
