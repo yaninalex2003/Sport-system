@@ -193,6 +193,37 @@ fun getFinishResults(finish: Group) {
     csvPrinter.close()
 }
 
+fun getTeamResults(finish:Group){
+    val winnerTime=timeToSeconds(finish.sportsmen.sortedBy{timeToSeconds(it.finishTime)}[0].finishTime)
+    val result=finish.sportsmen.groupBy{it.groupName}
+    for (i in result.keys){
+        val file =
+            File("C:\\Users\\79068\\IdeaProjects\\oop-2021-sport-management-system-yanix\\team_results\\group_${i}_result")
+        val writer = file.bufferedWriter()
+        val csvPrinter = CSVPrinter(
+            writer, CSVFormat.DEFAULT
+                .withHeader("${i}_result", "", "", "", "", "", "")
+        )
+        var number = 1
+        for (person in result[i]!!) {
+            csvPrinter.printRecord(
+                listOf(
+                    number,
+                    person.number,
+                    person.surname,
+                    person.name,
+                    person.rank,
+                    maxOf(0,2-timeToSeconds(person.finishTime)/winnerTime)
+                )
+            )
+            number += 1
+        }
+        csvPrinter.flush()
+        csvPrinter.close()
+
+    }
+}
+
 //Вспомогательные функции времени
 fun timeToSeconds(time: String): Int {
     val timeList = time.split(":")
