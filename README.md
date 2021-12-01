@@ -110,3 +110,5 @@ Finish,12:14:51
 C:\Users\79068\IdeaProjects\oop-2021-sport-management-system-yanix\control_points\one
 C:\Users\79068\IdeaProjects\oop-2021-sport-management-system-yanix\control_points\two
 C:\Users\79068\IdeaProjects\oop-2021-sport-management-system-yanix\control_points\three
+C:\Users\79068\IdeaProjects\oop-2021-sport-management-system-yanix\control_points\four
+C:\Users\79068\IdeaProjects\oop-2021-sport-management-system-yanix\control_points\five
