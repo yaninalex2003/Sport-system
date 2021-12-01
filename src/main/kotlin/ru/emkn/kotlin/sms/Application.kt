@@ -2,9 +2,8 @@ package ru.emkn.kotlin.sms
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
-import ru.emkn.kotlin.sms.timeToString
 import java.io.File
-import kotlin.system.exitProcess
+import kotlin.random.Random
 
 
 typealias GroupName = String
@@ -13,7 +12,11 @@ typealias ParticipantsList = MutableList<Participant>
 typealias GroupsMap = MutableMap<GroupName, ParticipantsList>
 
 
-class Application {
+class Application(
+    val appDir: String = "./applications",
+    val groupsDir: String = "./groups",
+    val seed: Random = Random
+) {
     private val groups: GroupsMap
         get() = generateGroupsMap()
 
@@ -24,8 +27,7 @@ class Application {
          * а затем распределяется рандомным образом внутри группы
          * добавляется колонка "Команда" для дальнейшего использования
          */
-        val dir = "./applications/"
-        val applications = File(dir).listFiles()
+        val applications = File(appDir).listFiles()
         val groups: GroupsMap = mutableMapOf()
         applications.forEach { file ->
             csvReader().readAllWithHeader(file).forEach { app ->
@@ -35,7 +37,7 @@ class Application {
                 groups[groupname]?.add(participant) ?: run { groups[groupname] = mutableListOf(participant) }
             }
         }
-        groups.forEach { _, v -> v.shuffle() }
+        groups.forEach { _, v -> v.shuffle(seed) }
         return groups
     }
     private fun generateGroups(): GroupsMap {
@@ -60,14 +62,13 @@ class Application {
         /*
          * Создает файлы по группам вместе с заголовками в формате csv
          */
-        val dir = "./groups"
-        File(dir).mkdir()
+        File(groupsDir).mkdir()
         this.generateGroups().forEach { key, value ->
             val row = mutableListOf(value[0].keys.toList())
             value.forEach {
                 row.add(it.values.toList())
             }
-            csvWriter().writeAll(row, File("$dir/$key.csv"))
+            csvWriter().writeAll(row, File("$groupsDir/$key.csv"))
         }
     }
     fun create() {
