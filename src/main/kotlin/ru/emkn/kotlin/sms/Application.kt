@@ -18,7 +18,7 @@ class Application {
         get() = generateGroupsMap()
 
     fun generateGroupsMap(): GroupsMap {
-        val dir = "./sample-data/applications/"
+        val dir = "./applications/"
         val applications = File(dir).listFiles()
         val groups: GroupsMap = mutableMapOf()
         applications.forEach { file ->
