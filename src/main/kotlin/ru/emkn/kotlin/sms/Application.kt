@@ -12,12 +12,21 @@ typealias Participant = Map<String, String>
 typealias ParticipantsList = MutableList<Participant>
 typealias GroupsMap = MutableMap<GroupName, ParticipantsList>
 
+fun main() {
+    Application().create()
+}
 
 class Application {
-    val groups: GroupsMap
+    private val groups: GroupsMap
         get() = generateGroupsMap()
 
-    fun generateGroupsMap(): GroupsMap {
+    private fun generateGroupsMap(): GroupsMap {
+        /*
+         * Из папки applications для каждой заявки в формате csv
+         * загружается информация об участниках, разбивается на группы
+         * а затем распределяется рандомным образом внутри группы
+         * добавляется колонка "Команда" для дальнейшего использования
+         */
         val dir = "./applications/"
         val applications = File(dir).listFiles()
         val groups: GroupsMap = mutableMapOf()
@@ -32,7 +41,10 @@ class Application {
         groups.forEach { _, v -> v.shuffle() }
         return groups
     }
-    fun generateGroups(): GroupsMap {
+    private fun generateGroups(): GroupsMap {
+        /*
+        * Здесь нумеруется участник и выдается ему время на основании номера участия
+        */
         val list: GroupsMap = mutableMapOf()
         groups.forEach { key, value ->
             var counter = 0
@@ -45,10 +57,12 @@ class Application {
             }
             list[key] = temp
         }
-//        print(list)
         return list
     }
-    fun generateGroupsFiles(){
+    private fun generateGroupsFiles(){
+        /*
+         * Создает файлы по группам вместе с заголовками в формате csv
+         */
         val dir = "./groups"
         File(dir).mkdir()
         this.generateGroups().forEach { key, value ->
