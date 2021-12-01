@@ -5,9 +5,8 @@ import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVRecord
 import java.io.File
-import java.lang.StringBuilder
 
-fun main(args: Array<String>) {
+fun main() {
     val groupForFinish = makeGroupClassForFinishResults()
     getFinishResults(groupForFinish)
     getTeamResults(groupForFinish)

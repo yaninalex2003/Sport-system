@@ -39,13 +39,14 @@ internal class Test1 {
         group1.sportsmen = listOf(sportsman1, sportsman2).toMutableList()
         getFinishResults(group1)
         getTeamResults(group1)
-        var answ1 = scanFile1("./team_results\\helpFile1")
-        var ans1 = scanFile1("./team_results\\loh_result")
+        val answ1 = scanFile1("./team_results\\helpFile1")
+        val ans1 = scanFile1("./team_results\\loh_result")
         for (i in 0 until maxOf(answ1.size, ans1.size)) {
             assertEquals(answ1[i], ans1[i])
         }
     }
 
+    @Test
     fun test2() {
         val group2 = Group("tennis")
         val sportsman1 = Sportsman("Igor", "Efremov")
@@ -67,8 +68,8 @@ internal class Test1 {
         getFinishResults(group2)
         getTeamResults(group2)
 
-        var answ1 = scanFile1("./team_results\\helpFile2")
-        var ans1 = scanFile1("./team_results\\loch_result")
+        val answ1 = scanFile1("./team_results\\helpFile2")
+        val ans1 = scanFile1("./team_results\\loch_result")
         for (i in 0 until maxOf(answ1.size, ans1.size)) {
             assertEquals(answ1[i], ans1[i])
         }
