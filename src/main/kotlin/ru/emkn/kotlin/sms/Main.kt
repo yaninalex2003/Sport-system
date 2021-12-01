@@ -24,6 +24,7 @@ fun main(args: Array<String>) {
 
 }
 
+//Запрашивает у пользователя файлы с дынными
 fun readData(): List<File> {
     val ans = mutableListOf<File>()
     println("Введите количество спортивных коллективов")
@@ -54,19 +55,19 @@ fun getSportsmen(files: List<File>): List<Sportsman> {
     return people
 }
 
-
+//Вытаскивает из первой строки название спортивного коллектива
+// (обрабатывается случай названия, содержащего запятые)
 fun teamName(line: String): String {
     val splLine = line.split(",")
-    splLine.filter { it.isNotEmpty() }
     val ans = StringBuilder()
-    for (i in 1 until splLine.size) {
-        ans.append(splLine[i])
+    for (element in splLine.filter { it.isNotEmpty() }) {
+        ans.append(element)
         ans.append(",")
     }
-    ans.append(splLine.last())
-    return ans.toString()
+    return ans.toString().dropLast(1)
 }
 
+//Создает из строки в файле спортсмена
 fun makeSportsman(line: CSVRecord, team: String): Sportsman {
     val name = line.get(1)
     val surname = line.get(2)
@@ -78,6 +79,8 @@ fun makeSportsman(line: CSVRecord, team: String): Sportsman {
     return newSportsman
 }
 
+//По мапу(название группы, спискок спортсменов в этой группе) создает для каждой группы
+//файл со стартовыми протоколами
 fun getStartProtocols(groups: Map<String, List<Sportsman>>) {
     groups.forEach { it.value.shuffled() }
     for (oneGroup in groups.keys) {
@@ -98,6 +101,7 @@ fun getStartProtocols(groups: Map<String, List<Sportsman>>) {
                     person.surname,
                     person.name,
                     person.rank,
+                    person.team,
                     timeToString(number)
                 )
             )
@@ -108,6 +112,7 @@ fun getStartProtocols(groups: Map<String, List<Sportsman>>) {
     }
 }
 
+//Создает класс группа, по стартовому протоколу группы
 fun makeGroupClassForFinishResults(): Group {
     println("Введите название файла, хранящего стартовый протокол группы")
     val startFileName = readLine()!!
@@ -130,6 +135,7 @@ fun makeGroupClassForFinishResults(): Group {
     return ans
 }
 
+//Создает файл с финишным результатами группы
 fun getFinishResults(finish: Group) {
     for (file in finish.controlPoints) {
         val reader = file.bufferedReader()
@@ -172,6 +178,7 @@ fun getFinishResults(finish: Group) {
     csvPrinter.close()
 }
 
+//Вспомогательные функции времени
 fun timeToSeconds(time: String): Int {
     val timeList = time.split(":")
     return timeList[0].toInt() * 3600 + timeList[1].toInt() * 60 + timeList[2].toInt()
