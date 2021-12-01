@@ -8,7 +8,6 @@ import java.io.File
 import java.lang.StringBuilder
 
 fun main(args: Array<String>) {
-    Application().create()
     println("Введите ''Стартовый протокол'' или ''Финишный протокол''")
     val whatNeedToDo = readLine()
     val groups: Map<String, List<Sportsman>>

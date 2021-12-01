@@ -45,7 +45,7 @@ class Application {
             var counter = 0
             val temp: ParticipantsList = mutableListOf()
             value.forEach {
-                val map = mutableMapOf("Номер" to "$counter")
+                val map = mutableMapOf("Номер" to "${counter+1}")
                 map.putAll(it)
                 map["Время"] = timeToString(counter++)
                 temp.add(map)
