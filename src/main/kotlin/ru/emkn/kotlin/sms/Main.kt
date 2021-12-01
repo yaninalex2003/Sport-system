@@ -204,7 +204,7 @@ fun getTeamResults(finish:Group){
         val writer = file.bufferedWriter()
         val csvPrinter = CSVPrinter(
             writer, CSVFormat.DEFAULT
-                .withHeader("${i}", "", "", "", "", "", "")
+                .withHeader("$i", "", "", "", "", "", "")
         )
         var number = 1
         for (person in result[i]!!) {
