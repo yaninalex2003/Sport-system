@@ -7,5 +7,5 @@ class Group(var name : String) {
 
     var sportsmen = mutableListOf<Sportsman>()
 
-    var size = sportsmen.size
+    var size: Int = 0
 }
