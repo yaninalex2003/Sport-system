@@ -2,9 +2,7 @@ package ru.emkn.kotlin.sms
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
-import ru.emkn.kotlin.sms.timeToString
 import java.io.File
-import kotlin.system.exitProcess
 
 
 typealias GroupName = String
@@ -38,7 +36,7 @@ class Application {
             var counter = 0
             val temp: ParticipantsList = mutableListOf()
             value.forEach {
-                val map = mutableMapOf("Номер" to "$counter")
+                val map = mutableMapOf("Номер" to "${counter+1}")
                 map.putAll(it)
                 map["Время"] = timeToString(counter++)
                 temp.add(map)
