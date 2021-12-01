@@ -49,7 +49,7 @@ fun getSportsmen(files: List<File>): List<Sportsman> {
                 .withTrim()
         )
         csvParser.forEach {
-            if (it.get(0) != "Группа") people.add(makeSportsman(it, team))
+            if (it.get(0) != "Группа") people.add(makeSportsmanFromTeamsData(it, team))
         }
     }
     return people
@@ -68,7 +68,7 @@ fun teamName(line: String): String {
 }
 
 //Создает из строки в файле спортсмена
-fun makeSportsman(line: CSVRecord, team: String): Sportsman {
+fun makeSportsmanFromTeamsData(line: CSVRecord, team: String): Sportsman {
     val name = line.get(1)
     val surname = line.get(2)
     val newSportsman = Sportsman(name, surname)
@@ -79,7 +79,7 @@ fun makeSportsman(line: CSVRecord, team: String): Sportsman {
     return newSportsman
 }
 
-//По мапу(название группы, спискок спортсменов в этой группе) создает для каждой группы
+//По мапу(название группы, список спортсменов в этой группе) создает для каждой группы
 //файл со стартовыми протоколами
 fun getStartProtocols(groups: Map<String, List<Sportsman>>) {
     groups.forEach { it.value.shuffled() }
@@ -100,6 +100,7 @@ fun getStartProtocols(groups: Map<String, List<Sportsman>>) {
                     person.number,
                     person.surname,
                     person.name,
+                    person.birthday,
                     person.rank,
                     person.team,
                     timeToString(number)
@@ -124,7 +125,8 @@ fun makeGroupClassForFinishResults(): Group {
             .withTrim()
     )
     csvParser.forEach{
-        ans.sportsmen.add(makeSportsman(it, ans.name))
+        ans.sportsmen.add(makeSportsmanFromStartProtocol(it, ans.name))
+        ans.size+=1
     }
 
     println("Для каждого участника введите название файла содержащего данные о прохождении контрольных пунктов")
@@ -135,16 +137,28 @@ fun makeGroupClassForFinishResults(): Group {
     return ans
 }
 
+//Создает спортсмена из строчки в стартовом протоколе
+fun makeSportsmanFromStartProtocol(line: CSVRecord, group: String): Sportsman{
+    val name = line.get(1)
+    val surname = line.get(2)
+    val newSportsman = Sportsman(name, surname)
+    newSportsman.number = line.get(0).toInt()
+    newSportsman.birthday = line.get(3).toInt()
+    newSportsman.rank = line.get(4)
+    newSportsman.team = line.get(5)
+    newSportsman.groupName = group
+    return newSportsman
+}
 //Создает файл с финишным результатами группы
 fun getFinishResults(finish: Group) {
     for (file in finish.controlPoints) {
         val reader = file.bufferedReader()
+        val numberOfPerson = file.bufferedReader().readLine().split(",")[0].toInt()
         val csvParser = CSVParser(
             reader, CSVFormat.DEFAULT
                 .withIgnoreHeaderCase()
                 .withTrim()
         )
-        val numberOfPerson = csvParser.headerNames[0].toInt()
         val person = finish.sportsmen.find { it.number == numberOfPerson }!!
         csvParser.forEach {
             person.times.add(it.get(1))
@@ -152,7 +166,7 @@ fun getFinishResults(finish: Group) {
         person.finishTime = person.times.last()
         person.finishTimeInSeconds = timeToSeconds(person.finishTime)
     }
-    finish.sportsmen.sortedBy { it.finishTimeInSeconds }.reversed()
+    finish.sportsmen = finish.sportsmen.sortedBy { it.finishTimeInSeconds }.toMutableList()
     val file =
         File("C:\\Users\\79068\\IdeaProjects\\oop-2021-sport-management-system-yanix\\finish_results\\group_${finish.name}")
     val writer = file.bufferedWriter()
@@ -169,6 +183,7 @@ fun getFinishResults(finish: Group) {
                 person.surname,
                 person.name,
                 person.rank,
+                person.team,
                 person.finishTime
             )
         )

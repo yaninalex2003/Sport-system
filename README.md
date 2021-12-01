@@ -107,3 +107,6 @@ Finish,12:14:51
 4. Система будет развиваться и изменяться. Постарайтесь построить объектную модель, которую будет удобно расширять. При этом не надо слишком увлекаться, 
 поскольку пока вам неизвестно куда пойдёт развитие. Ищите баланс ⚖!  
 
+C:\Users\79068\IdeaProjects\oop-2021-sport-management-system-yanix\control_points\one
+C:\Users\79068\IdeaProjects\oop-2021-sport-management-system-yanix\control_points\two
+C:\Users\79068\IdeaProjects\oop-2021-sport-management-system-yanix\control_points\three
