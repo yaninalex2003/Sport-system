@@ -5,15 +5,22 @@ import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVRecord
 import java.io.File
+import mu.KotlinLogging
+
+val logger = KotlinLogging.logger {  }
 
 fun main() {
+    logger.info {"program started"}
     val groupForFinish = makeGroupClassForFinishResults()
+    logger.info {"groupForFinish was created"}
     getFinishResults(groupForFinish)
+    logger.info {"file with finishResults was created"}
     getTeamResults(groupForFinish)
+    logger.info {"file with teamResults was created"}
 }
 
 
-//Создает класс группа, по стартовому протоколу группы
+//Создает класс Group, по стартовому протоколу группы
 fun makeGroupClassForFinishResults(): Group {
     println("Введите название файла, хранящего стартовый протокол группы")
     val startFileName = readLine()!!
