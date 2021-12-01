@@ -13,7 +13,6 @@ typealias ParticipantsList = MutableList<Participant>
 typealias GroupsMap = MutableMap<GroupName, ParticipantsList>
 
 
-
 class Application {
     val groups: GroupsMap
         get() = generateGroupsMap()
@@ -22,10 +21,12 @@ class Application {
         val dir = "./sample-data/applications/"
         val applications = File(dir).listFiles()
         val groups: GroupsMap = mutableMapOf()
-        applications.forEach { it ->
-            csvReader().readAllWithHeader(it).forEach {
-                val groupname = it[it.keys.first()]!!
-                groups[groupname]?.add(it) ?: run { groups[groupname] = mutableListOf(it) }
+        applications.forEach { file ->
+            csvReader().readAllWithHeader(file).forEach { app ->
+                val groupname = app[app.keys.first()]!!
+                val participant = app.toMutableMap()
+                participant["Команда"] = file.nameWithoutExtension
+                groups[groupname]?.add(participant) ?: run { groups[groupname] = mutableListOf(participant) }
             }
         }
         groups.forEach { _, v -> v.shuffle() }
@@ -38,7 +39,7 @@ class Application {
             val temp: ParticipantsList = mutableListOf()
             value.forEach {
                 val map = mutableMapOf("Номер" to "$counter")
-                map.putAll(it.toMutableMap())
+                map.putAll(it)
                 map["Время"] = timeToString(counter++)
                 temp.add(map)
             }
@@ -51,7 +52,7 @@ class Application {
         val dir = "./groups"
         File(dir).mkdir()
         this.generateGroups().forEach { key, value ->
-            val row = mutableListOf<List<String>>()
+            val row = mutableListOf(value[0].keys.toList())
             value.forEach {
                 row.add(it.values.toList())
             }
