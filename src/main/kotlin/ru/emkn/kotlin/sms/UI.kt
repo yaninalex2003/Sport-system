@@ -1,52 +1,62 @@
 package ru.emkn.kotlin.sms
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
 import androidx.compose.ui.unit.dp
-import kotlin.reflect.jvm.internal.impl.resolve.scopes.receivers.ThisClassReceiver
 
-open class UI(val state: MutableState<Int>) {
+enum class State {
+    Groups, Distance, Commands, Participants, Marks
+}
+
+class UI(private val state: MutableState<State>) {
 
     @Composable
     fun navigation() = Row(Modifier.fillMaxWidth()) {
         Button(modifier = Modifier.width(240.dp),
-            onClick = {state.value = 0}) {
+            onClick = {state.value = State.Groups}) {
             Text("Список групп")
         }
         Button(modifier = Modifier.width(240.dp),
-            onClick = {state.value = 1}) {
+            onClick = {state.value = State.Distance}) {
             Text("Список дистанций")
         }
         Button(modifier = Modifier.width(240.dp),
-            onClick = {state.value = 2}) {
+            onClick = {state.value = State.Commands}) {
             Text("Список команд")
         }
         Button(modifier = Modifier.width(240.dp),
-            onClick = {}) {
+            onClick = {state.value = State.Participants}) {
             Text("Список участников")
         }
         Button(modifier = Modifier.width(240.dp),
-            onClick = {}) {
+            onClick = {state.value = State.Marks}) {
             Text("Список отметок")
         }
     }
     @Composable
     fun innerBody() = Row() {
         return when(state.value) {
-            0 -> groups()
-            1 -> dist()
-            else -> Text("state != 1 or state != 0")
+            State.Groups -> groups()
+            State.Distance -> dist()
+            State.Commands -> comm()
+            State.Participants -> partic()
+            State.Marks -> marks()
         }
     }
     @Composable
     fun groups() = Text("Groups")
+
     @Composable
     fun dist() = Text("Dis")
 
+    @Composable
+    fun comm() = Text("Comm")
+
+    @Composable
+    fun partic() = Text("Partic")
+
+    @Composable
+    fun marks() = Text("Marks")
 }
