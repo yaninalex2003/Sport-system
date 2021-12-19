@@ -23,50 +23,17 @@ import androidx.compose.ui.window.rememberWindowState
 val logger = KotlinLogging.logger {  }
 
 fun main() = application {
-    Window(
-        onCloseRequest = ::exitApplication,
-        title = "Sport Management System Yanix",
-        state = rememberWindowState(width = 1200.dp, height = 760.dp)
-    ) {
-        val count = remember { mutableStateOf(0) }
-        MaterialTheme {
-            Row(Modifier.fillMaxWidth()) {
-                Button(modifier = Modifier.width(240.dp),
-                    onClick = {
-                        count.value++
-                    }) {
-                    Text("Список групп")
-                }
-                Button(modifier = Modifier.width(240.dp),
-                    onClick = {
-                        count.value = 0
-                    }) {
-                    Text("Список дистанций")
-                }
-                Button(modifier = Modifier.width(240.dp),
-                onClick = {
-                    count.value++
-                }) {
-                Text("Список команд")
-                }
-                Button(modifier = Modifier.width(240.dp),
-                    onClick = {
-                        count.value++
-                    }) {
-                    Text("Список участников")
-                }
-                Button(modifier = Modifier.width(240.dp),
-                    onClick = {
-                        count.value++
-                    }) {
-                    Text("Список отметок")
-                }
-            }
-            Row() {
 
-            }
-        }
-    }
+
+logger.info {"program started"}
+val groupForFinish = makeGroupClassForFinishResults()
+logger.info {"groupForFinish was created"}
+getFinishResults(groupForFinish)
+logger.info {"file with finishResults was created"}
+getTeamResults(groupForFinish)
+logger.info {"file with teamResults was created"}
+
+
 }
 
 
