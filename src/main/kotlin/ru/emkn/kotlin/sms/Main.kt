@@ -11,6 +11,7 @@ import mu.KotlinLogging
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,44 +29,45 @@ fun main() = application {
         title = "Sport Management System Yanix",
         state = rememberWindowState(width = 1200.dp, height = 760.dp)
     ) {
-        val count = remember { mutableStateOf(0) }
-        MaterialTheme {
-            Row(Modifier.fillMaxWidth()) {
-                Button(modifier = Modifier.width(240.dp),
-                    onClick = {
-                        count.value++
-                    }) {
-                    Text("Список групп")
+        val state = remember { mutableStateOf(0) }
+        MaterialTheme() {
+            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                Row(Modifier.fillMaxWidth()) {
+                    Button(modifier = Modifier.width(240.dp),
+                        onClick = {state.value = 0}) {
+                        Text("Список групп")
+                    }
+                    Button(modifier = Modifier.width(240.dp),
+                        onClick = {state.value = 1}) {
+                        Text("Список дистанций")
+                    }
+                    Button(modifier = Modifier.width(240.dp),
+                        onClick = {state.value = 2}) {
+                        Text("Список команд")
+                    }
+                    Button(modifier = Modifier.width(240.dp),
+                        onClick = {}) {
+                        Text("Список участников")
+                    }
+                    Button(modifier = Modifier.width(240.dp),
+                        onClick = {}) {
+                        Text("Список отметок")
+                    }
                 }
-                Button(modifier = Modifier.width(240.dp),
-                    onClick = {
-                        count.value = 0
-                    }) {
-                    Text("Список дистанций")
+                Row() {
+                    f(state.value)
                 }
-                Button(modifier = Modifier.width(240.dp),
-                onClick = {
-                    count.value++
-                }) {
-                Text("Список команд")
-                }
-                Button(modifier = Modifier.width(240.dp),
-                    onClick = {
-                        count.value++
-                    }) {
-                    Text("Список участников")
-                }
-                Button(modifier = Modifier.width(240.dp),
-                    onClick = {
-                        count.value++
-                    }) {
-                    Text("Список отметок")
-                }
-            }
-            Row() {
-
             }
         }
+    }
+}
+
+@Composable
+fun f(state: Any) {
+    return when(state) {
+        0 -> Text("Groups")
+        1 -> Text("Distances")
+        else -> Text("state != 1 or state != 0")
     }
 }
 
