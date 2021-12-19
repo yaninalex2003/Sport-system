@@ -29,7 +29,7 @@ fun main() = application {
         title = "Sport Management System Yanix",
         state = rememberWindowState(width = 1200.dp, height = 760.dp)
     ) {
-        val state = remember { mutableStateOf(0) }
+        val state = remember { mutableStateOf(State.Groups) }
         val ui = UI(state)
         MaterialTheme() {
             Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
