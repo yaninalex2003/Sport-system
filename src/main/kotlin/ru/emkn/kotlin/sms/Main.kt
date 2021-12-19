@@ -1,5 +1,6 @@
 package ru.emkn.kotlin.sms
 
+import androidx.compose.foundation.layout.*
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
@@ -7,9 +8,6 @@ import org.apache.commons.csv.CSVRecord
 import java.io.File
 import mu.KotlinLogging
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -27,34 +25,45 @@ val logger = KotlinLogging.logger {  }
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Compose for Desktop",
-        state = rememberWindowState(width = 300.dp, height = 300.dp)
+        title = "Sport Management System Yanix",
+        state = rememberWindowState(width = 1200.dp, height = 760.dp)
     ) {
         val count = remember { mutableStateOf(0) }
         MaterialTheme {
-            Column(Modifier.fillMaxSize(), Arrangement.spacedBy(5.dp)) {
-                Button(modifier = Modifier.align(Alignment.CenterHorizontally),
+            Row(Modifier.fillMaxWidth()) {
+                Button(modifier = Modifier.width(240.dp),
                     onClick = {
                         count.value++
                     }) {
-                    Text(if (count.value == 0) "Hello World" else "Clicked ${count.value}!")
+                    Text("Список групп")
                 }
-                Button(modifier = Modifier.align(Alignment.CenterHorizontally),
+                Button(modifier = Modifier.width(240.dp),
                     onClick = {
                         count.value = 0
                     }) {
-                    Text("Reset")
+                    Text("Список дистанций")
+                }
+                Button(modifier = Modifier.width(240.dp),
+                onClick = {
+                    count.value++
+                }) {
+                Text("Список команд")
+                }
+                Button(modifier = Modifier.width(240.dp),
+                    onClick = {
+                        count.value++
+                    }) {
+                    Text("Список участников")
+                }
+                Button(modifier = Modifier.width(240.dp),
+                    onClick = {
+                        count.value++
+                    }) {
+                    Text("Список отметок")
                 }
             }
         }
     }
-    logger.info {"program started"}
-    val groupForFinish = makeGroupClassForFinishResults()
-    logger.info {"groupForFinish was created"}
-    getFinishResults(groupForFinish)
-    logger.info {"file with finishResults was created"}
-    getTeamResults(groupForFinish)
-    logger.info {"file with teamResults was created"}
 }
 
 
