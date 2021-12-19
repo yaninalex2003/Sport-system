@@ -30,44 +30,13 @@ fun main() = application {
         state = rememberWindowState(width = 1200.dp, height = 760.dp)
     ) {
         val state = remember { mutableStateOf(0) }
+        val ui = UI(state)
         MaterialTheme() {
             Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                Row(Modifier.fillMaxWidth()) {
-                    Button(modifier = Modifier.width(240.dp),
-                        onClick = {state.value = 0}) {
-                        Text("Список групп")
-                    }
-                    Button(modifier = Modifier.width(240.dp),
-                        onClick = {state.value = 1}) {
-                        Text("Список дистанций")
-                    }
-                    Button(modifier = Modifier.width(240.dp),
-                        onClick = {state.value = 2}) {
-                        Text("Список команд")
-                    }
-                    Button(modifier = Modifier.width(240.dp),
-                        onClick = {}) {
-                        Text("Список участников")
-                    }
-                    Button(modifier = Modifier.width(240.dp),
-                        onClick = {}) {
-                        Text("Список отметок")
-                    }
-                }
-                Row() {
-                    f(state.value)
-                }
+                ui.navigation()
+                ui.innerBody()
             }
         }
-    }
-}
-
-@Composable
-fun f(state: Any) {
-    return when(state) {
-        0 -> Text("Groups")
-        1 -> Text("Distances")
-        else -> Text("state != 1 or state != 0")
     }
 }
 
