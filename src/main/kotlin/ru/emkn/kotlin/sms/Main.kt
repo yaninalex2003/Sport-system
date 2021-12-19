@@ -62,6 +62,9 @@ fun main() = application {
                     Text("Список отметок")
                 }
             }
+            Row() {
+
+            }
         }
     }
 }
