@@ -3,7 +3,7 @@ import java.io.File
 
 class Group(var name : String) {
 
-    var controlPoints = mutableListOf<File>()
+    var controlPoints = listOf<File>()
 
     var sportsmen = mutableListOf<Sportsman>()
 

@@ -24,7 +24,7 @@ import androidx.compose.ui.window.rememberWindowState
 val logger = KotlinLogging.logger {  }
 
 fun main() = application {
-    Window(
+    /*Window(
         onCloseRequest = ::exitApplication,
         title = "Sport Management System Yanix",
         state = rememberWindowState(width = 1200.dp, height = 760.dp)
@@ -37,12 +37,13 @@ fun main() = application {
                 ui.innerBody()
             }
         }
-    }
+    }*/
+    ControlPoints("Ж14").makeFinishResults()
 }
 
 
 //Создает класс Group, по стартовому протоколу группы
-fun makeGroupClassForFinishResults(): Group {
+/* makeGroupClassForFinishResults(): Group {
     println("Введите название файла, хранящего стартовый протокол группы")
     val startFileName = readLine()!!
     val reader = File(startFileName).bufferedReader()
@@ -67,17 +68,6 @@ fun makeGroupClassForFinishResults(): Group {
 }
 
 //Создает спортсмена из строчки в стартовом протоколе
-fun makeSportsmanFromStartProtocol(line: CSVRecord): Sportsman {
-    val name = line.get(2)
-    val surname = line.get(3)
-    val newSportsman = Sportsman(name, surname)
-    newSportsman.number = line.get(0).toInt()
-    newSportsman.birthday = line.get(4).toInt()
-    newSportsman.rank = line.get(5)
-    newSportsman.team = line.get(6)
-    newSportsman.groupName = line.get(1)
-    return newSportsman
-}
 
 //Создает файл с финишным результатами группы
 fun getFinishResults(finish: Group) {
@@ -121,7 +111,7 @@ fun getFinishResults(finish: Group) {
     }
     csvPrinter.flush()
     csvPrinter.close()
-}
+}*/
 
 //Вроде должна создавать файлы с результатами команд
 fun getTeamResults(finish: Group) {
@@ -151,7 +141,6 @@ fun getTeamResults(finish: Group) {
         }
         csvPrinter.flush()
         csvPrinter.close()
-
     }
 }
 
