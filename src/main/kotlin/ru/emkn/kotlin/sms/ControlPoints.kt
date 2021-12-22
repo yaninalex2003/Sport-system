@@ -10,10 +10,13 @@ import org.jetbrains.skia.paragraph.Direction
 import java.io.File
 
 class ControlPoints(val groupname: String) {
-    val files: List<File> = File("C:\\Users\\79068\\IdeaProjects\\oop-2021-sport-management-system-yanix\\control_points\\${groupname}").listFiles().toList()
+    val files: List<File> =
+        File("./control_points/${groupname}").listFiles()
+            .toList()
 
-    fun getGroup(): Group{
-        val groupFile = File("C:\\Users\\79068\\IdeaProjects\\oop-2021-sport-management-system-yanix\\groups\\${groupname}.csv")
+    fun getGroup(): Group {
+        val groupFile =
+            File("./groups/${groupname}.csv")
 
         val ans = Group(groupname)
         val csvParser = CSVParser(
@@ -30,9 +33,9 @@ class ControlPoints(val groupname: String) {
         return ans
     }
 
-    fun makeFinishResults(){
+    fun makeFinishResults() {
         val finish = getGroup()
-        for (file in files){
+        for (file in files) {
             val reader = file.bufferedReader()
             val numberOfPerson = reader.readLine().split(",")[0].toInt()
             val csvParser = CSVParser(
@@ -50,7 +53,7 @@ class ControlPoints(val groupname: String) {
 
         finish.sportsmen = finish.sportsmen.sortedBy { it.finishTimeInSeconds }.toMutableList()
         val file =
-            File(".\\finish_results\\${finish.name}_result.csv")
+            File("./finish_results/${finish.name}_result.csv")
         val writer = file.bufferedWriter()
         val csvPrinter = CSVPrinter(
             writer, CSVFormat.DEFAULT

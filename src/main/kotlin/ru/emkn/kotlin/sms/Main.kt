@@ -24,10 +24,10 @@ import androidx.compose.ui.window.rememberWindowState
 val logger = KotlinLogging.logger {  }
 
 fun main() = application {
-    /*Window(
+    Window(
         onCloseRequest = ::exitApplication,
         title = "Sport Management System Yanix",
-        state = rememberWindowState(width = 1200.dp, height = 760.dp)
+        state = rememberWindowState(width = 1200.dp, height = 960.dp)
     ) {
         val state = remember { mutableStateOf(State.Groups) }
         val ui = UI(state)
@@ -37,8 +37,8 @@ fun main() = application {
                 ui.innerBody()
             }
         }
-    }*/
-    ControlPoints("Ж14").makeFinishResults()
+    }
+    //ControlPoints("Ж14").makeFinishResults()
 }
 
 
