@@ -17,7 +17,7 @@ internal class Test1 {
     @Test
     fun test1() {
 
-        ControlPoints("Ж14").makeFinishResults()
+        ControlPoints("Ж14").makeFinishResultsInFile()
         ControlPoints("Ж14").getTeamResults()
         val answ1 = scanFile1("./team_results/helpFile1")
         val ans1 = scanFile1("./team_results/ПАТРИОТ_result")
@@ -34,7 +34,7 @@ internal class Test1 {
     @Test
     fun test2() {
 
-        ControlPoints("Ж14").makeFinishResults()
+        ControlPoints("Ж14").makeFinishResultsInFile()
         ControlPoints("Ж14").getTeamResults()
 
         val answ1 = scanFile1("./team_results/helpFile2")
