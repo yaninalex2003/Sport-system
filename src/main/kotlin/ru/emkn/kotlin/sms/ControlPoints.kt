@@ -143,3 +143,14 @@ fun makeSportsmanFromStartProtocol(line: CSVRecord): Sportsman {
     newSportsman.groupName = line.get(1)
     return newSportsman
 }
+
+//Вспомогательные функции времени
+fun timeToSeconds(time: String): Int {
+    val timeList = time.split(":")
+    return timeList[0].toInt() * 3600 + timeList[1].toInt() * 60 + timeList[2].toInt()
+}
+
+fun timeToString(number: Int): String {
+    return if (number % 60 < 10) "${12 + number / 60}:0${number % 60}:00"
+    else "${12 + number / 60}:${number % 60}:00"
+}

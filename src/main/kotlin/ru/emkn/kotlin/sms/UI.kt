@@ -20,29 +20,30 @@ class UI(private val state: MutableState<State>) {
     @Composable
     fun navigation() = Row(Modifier.fillMaxWidth()) {
         Button(modifier = Modifier.width(240.dp),
-            onClick = {state.value = State.Groups}) {
+            onClick = { state.value = State.Groups }) {
             Text("Список групп")
         }
         Button(modifier = Modifier.width(240.dp),
-            onClick = {state.value = State.Distance}) {
+            onClick = { state.value = State.Distance }) {
             Text("Список дистанций")
         }
         Button(modifier = Modifier.width(240.dp),
-            onClick = {state.value = State.Commands}) {
+            onClick = { state.value = State.Commands }) {
             Text("Список команд")
         }
         Button(modifier = Modifier.width(240.dp),
-            onClick = {state.value = State.Participants}) {
+            onClick = { state.value = State.Participants }) {
             Text("Список участников")
         }
         Button(modifier = Modifier.width(240.dp),
-            onClick = {state.value = State.Marks}) {
+            onClick = { state.value = State.Marks }) {
             Text("Список отметок")
         }
     }
+
     @Composable
     fun innerBody() = Row() {
-        return when(state.value) {
+        return when (state.value) {
             State.Groups -> groups()
             State.Distance -> dist()
             State.Commands -> comm()
@@ -50,6 +51,7 @@ class UI(private val state: MutableState<State>) {
             State.Marks -> marks()
         }
     }
+
     @Composable
     fun groups() {
         val buttons = getGroupNames()
@@ -61,12 +63,10 @@ class UI(private val state: MutableState<State>) {
                 .padding(end = 12.dp, bottom = 12.dp)
         ) {
             Column {
-                for (but in buttons){
+                for (but in buttons) {
                     Button(modifier = Modifier.width(240.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = Red),
-                        onClick = {
-
-                        }) {
+                        onClick = { state.value = groupRes(but) }) {
                         Text(but)
                     }
                 }
@@ -76,8 +76,28 @@ class UI(private val state: MutableState<State>) {
 
     @Composable
     fun groupRes(but: String) {
-        ControlPoints("./control_points/${but}").makeFinishResults()
+        val people = ControlPoints(but).makeFinishResults()
+        val stateVertical = rememberScrollState(0)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(stateVertical)
+                .padding(end = 12.dp, bottom = 12.dp)
+        ) {
+            Column {
+                for (chel in people.sportsmen) {
+                    Row { }
+                    Button(modifier = Modifier.width(240.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Red),
+                        onClick = {
+                            state.value =
 
+                        }) {
+                        Text(but)
+                    }
+                }
+            }
+        }
     }
 
     @Composable
@@ -94,7 +114,7 @@ class UI(private val state: MutableState<State>) {
                 .padding(end = 12.dp, bottom = 12.dp)
         ) {
             Column {
-                for (but in buttons){
+                for (but in buttons) {
                     Button(modifier = Modifier.width(240.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = Red),
                         onClick = { state.value = State.Commands }) {
@@ -112,18 +132,18 @@ class UI(private val state: MutableState<State>) {
     fun marks() = Text("Marks")
 }
 
-fun getGroupNames(): List<String>{
-    val  ans = mutableListOf<String>()
-    for (file in File("./groups").listFiles().toList()){
-        ans.add(file.name.substring(0,file.name.length-4))
+fun getGroupNames(): List<String> {
+    val ans = mutableListOf<String>()
+    for (file in File("./groups").listFiles().toList()) {
+        ans.add(file.name.substring(0, file.name.length - 4))
     }
     return ans
 }
 
-fun getTeamNames(): List<String>{
-    val  ans = mutableListOf<String>()
-    for (file in File("./applications").listFiles().toList()){
-        ans.add(file.name.substring(0,file.name.length-4))
+fun getTeamNames(): List<String> {
+    val ans = mutableListOf<String>()
+    for (file in File("./applications").listFiles().toList()) {
+        ans.add(file.name.substring(0, file.name.length - 4))
     }
     return ans
 }
