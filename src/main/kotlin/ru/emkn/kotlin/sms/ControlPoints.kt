@@ -10,10 +10,11 @@ import org.jetbrains.skia.paragraph.Direction
 import java.io.File
 
 class ControlPoints(val groupname: String) {
-    val files: List<File> = File("C:\\Users\\79068\\IdeaProjects\\oop-2021-sport-management-system-yanix\\control_points\\${groupname}").listFiles().toList()
+    val files: List<File> = File("./control_points/${groupname}").listFiles().toList()
+
 
     fun getGroup(): Group{
-        val groupFile = File("C:\\Users\\79068\\IdeaProjects\\oop-2021-sport-management-system-yanix\\groups\\${groupname}.csv")
+        val groupFile = File("./groups/${groupname}.csv")
 
         val ans = Group(groupname)
         val csvParser = CSVParser(
@@ -73,6 +74,53 @@ class ControlPoints(val groupname: String) {
         }
         csvPrinter.flush()
         csvPrinter.close()
+    }
+    fun getTeamResults() {
+        val finish = getGroup()
+        for (file in files){
+            val reader = file.bufferedReader()
+            val numberOfPerson = reader.readLine().split(",")[0].toInt()
+            val csvParser = CSVParser(
+                reader, CSVFormat.DEFAULT
+                    .withIgnoreHeaderCase()
+                    .withTrim()
+            )
+            val person = finish.sportsmen.find { it.number == numberOfPerson }!!
+            csvParser.forEach {
+                person.times.add(it.get(1))
+            }
+            person.finishTime = person.times.last()
+            person.finishTimeInSeconds = timeToSeconds(person.finishTime)
+        }
+
+        finish.sportsmen = finish.sportsmen.sortedBy { it.finishTimeInSeconds }.toMutableList()
+        val winnerTime = timeToSeconds(finish.sportsmen.sortedBy { timeToSeconds(it.finishTime) }[0].finishTime)
+        val result = finish.sportsmen.groupBy { it.team }
+        for (i in result.keys) {
+            val file =
+                File(".\\team_results\\${i}_result")
+            val writer = file.bufferedWriter()
+            val csvPrinter = CSVPrinter(
+                writer, CSVFormat.DEFAULT
+                    .withHeader(i, "", "", "", "", "", "")
+            )
+            var number = 1
+            for (person in result[i]!!) {
+                csvPrinter.printRecord(
+                    listOf(
+                        number,
+                        person.number,
+                        person.surname,
+                        person.name,
+                        person.rank,
+                        maxOf(0, (100 * (2F - timeToSeconds(person.finishTime) / winnerTime.toFloat())).toInt())
+                    )
+                )
+                number += 1
+            }
+            csvPrinter.flush()
+            csvPrinter.close()
+        }
     }
 }
 
