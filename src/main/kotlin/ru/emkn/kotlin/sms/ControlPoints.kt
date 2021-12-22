@@ -33,7 +33,7 @@ class ControlPoints(val groupname: String) {
         return ans
     }
 
-    fun makeFinishResults() {
+    fun makeFinishResults(): Group {
         val finish = getGroup()
         for (file in files) {
             val reader = file.bufferedReader()
@@ -52,6 +52,12 @@ class ControlPoints(val groupname: String) {
         }
 
         finish.sportsmen = finish.sportsmen.sortedBy { it.finishTimeInSeconds }.toMutableList()
+
+        return finish
+    }
+
+    fun  makeFinishResultsInFile() {
+        val finish = makeFinishResults()
         val file =
             File("./finish_results/${finish.name}_result.csv")
         val writer = file.bufferedWriter()
