@@ -110,40 +110,25 @@ class ControlPoints(val groupname: String) {
         csvPrinter.flush()
         csvPrinter.close()
     }
-    fun getTeamResults() {
-        val finish = getGroup()
-        for (file in files){
-            val reader = file.bufferedReader()
-            val numberOfPerson = reader.readLine().split(",")[0].toInt()
-            val csvParser = CSVParser(
-                reader, CSVFormat.DEFAULT
-                    .withIgnoreHeaderCase()
-                    .withTrim()
-            )
-            val person = finish.sportsmen.find { it.number == numberOfPerson }!!
-            csvParser.forEach {
-                person.times.add(it.get(1))
-            }
-            person.finishTime = person.times.last()
-            person.finishTimeInSeconds = timeToSeconds(person.finishTime)
-        }
 
-        finish.sportsmen = finish.sportsmen.sortedBy { it.finishTimeInSeconds }.toMutableList()
-        val winnerTime = timeToSeconds(finish.sportsmen.sortedBy { timeToSeconds(it.finishTime) }[0].finishTime)
+    fun getTeamResults() {
+        val finish = makeFinishResults()
+        val winnerTime = timeToSeconds(finish.sportsmen[0].finishTime)
         val result = finish.sportsmen.groupBy { it.team }
-        for (i in result.keys) {
+        for (key in result.keys) {
             val file =
-                File("./team_results/${i}_result")
+                File("./team_results/${key}_result")
             val writer = file.bufferedWriter()
             val csvPrinter = CSVPrinter(
                 writer, CSVFormat.DEFAULT
-                    .withHeader(i, "", "", "", "", "", "")
+                    .withHeader(key, "", "", "", "", "", "")
             )
             var number = 1
-            for (person in result[i]!!) {
+            for (person in result[key]!!) {
                 csvPrinter.printRecord(
                     listOf(
                         number,
+                        person.groupName,
                         person.number,
                         person.surname,
                         person.name,

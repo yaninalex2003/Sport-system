@@ -25,7 +25,7 @@ val logger = KotlinLogging.logger {  }
 
 fun main() = application {
     //run{Application().create()}
-    Window(
+    /*Window(
         onCloseRequest = ::exitApplication,
         title = "Sport Management System Yanix",
         state = rememberWindowState(width = 1200.dp, height = 760.dp)
@@ -38,6 +38,6 @@ fun main() = application {
                 ui.innerBody()
             }
         }
-    }
-    //println(ControlPoints("Ж14").makeFinishResults().sportsmen[0].name)
+    }*/
+    ControlPoints("Жстуд").getTeamResults()
 }

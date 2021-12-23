@@ -99,10 +99,9 @@ class UI(private val state: MutableState<State>) {
     @Composable
     fun groupStart(but: String) {
         if (ControlPoints(but).files.isEmpty()) {
-            Text("Файл пуст")
+            Text("  Файл пуст")
             return
         }
-        //val people = ControlPoints(but).makeFinishResults()
         val stateVertical = rememberScrollState(0)
         Box(
             modifier = Modifier
@@ -119,10 +118,9 @@ class UI(private val state: MutableState<State>) {
     @Composable
     fun groupFinish(but: String) {
         if (ControlPoints(but).files.isEmpty()) {
-            Text("Файл пуст")
+            Text("  Файл пуст")
             return
         }
-        //val people = ControlPoints(but).makeFinishResults()
         val stateVertical = rememberScrollState(0)
         Box(
             modifier = Modifier
