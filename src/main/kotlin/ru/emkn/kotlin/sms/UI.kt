@@ -18,6 +18,7 @@ class UI(private val state: MutableState<State>) {
     var but = ""
     var dist = ""
     var import_var = "./applications"
+    var marks_var = "./control_points"
 
     @Composable
     fun navigation() = Row(Modifier.fillMaxWidth()) {
@@ -291,7 +292,56 @@ class UI(private val state: MutableState<State>) {
     }
 
     @Composable
-    fun marks() = Text("Marks")
+    fun marks() = Box {
+//        val res = getTeamNames()
+        val stateVertical = rememberScrollState(0)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(stateVertical), Arrangement.spacedBy(5.dp)
+        ) {
+            var text by rememberSaveable { mutableStateOf("") }
+            Row(modifier = Modifier.align(Alignment.Start).height(100.dp), Arrangement.spacedBy(10.dp)) {
+                TextField(
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    value = text,
+                    onValueChange = {
+                        text = it
+                        marks_var = it
+                    },
+                    label = { Text("Path to directory") }
+                )
+                Button(onClick = { load_marks() }) { Text("Import") }
+                Button(onClick = {  }) { Text("Results!") }
+            }
+//            Row() {
+//                Column {
+//                    for (but in buttons) {
+//                        Button(modifier = Modifier.width(240.dp),
+//                            colors = ButtonDefaults.buttonColors(backgroundColor = Red),
+//                            onClick = { state.value = State.Commands }) {
+//                            Text(but)
+//                        }
+//                    }
+//                }
+//            }
+        }
+    }
+
+    private fun load_marks() {
+        val target = File(this.marks_var)
+        this.state.value = State.Commands
+        this.state.value = State.Marks
+        if (target.isDirectory) {
+            target.listFiles()?.forEach { group ->
+                if (group.isDirectory) {
+                    group.listFiles().forEach {
+                        if (it.extension == "csv") it.copyTo(File("./control_points/${group.name}/${it.name}"))
+                    }
+                }
+            } ?: ""
+        }
+    }
 }
 
 fun getGroupNames(): List<String> {
