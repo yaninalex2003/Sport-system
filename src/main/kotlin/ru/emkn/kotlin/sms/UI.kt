@@ -182,7 +182,7 @@ class UI(private val state: MutableState<State>) {
             Column {
                 for (element in information) {
                     Row {
-                        Text(element, color = Color.hsv(0f, 0f, 0.13f))
+                        Text(element, color = White)
                     }
                 }
             }
@@ -214,11 +214,25 @@ class UI(private val state: MutableState<State>) {
             }
             Row() {
                 Column {
-                    for (but in buttons) {
-                        Button(modifier = Modifier.width(240.dp),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = White, contentColor = Color.hsv(0f, 0f, 0.13f)),
-                            onClick = { state.value = State.Commands }) {
-                            Text(but, color = Color.hsv(0f, 0f, 0.13f))
+                    buttons.forEach {
+                        Row {
+                            Text("  $it", modifier = Modifier.width(200.dp), color = White)
+                            Button(modifier = Modifier.width(240.dp),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = White, contentColor = Color.hsv(0f, 0f, 0.13f)),
+                                onClick = {
+                                    state.value = State.Commands
+                                    but = it
+                                }) {
+                                Text("Список команды")
+                            }
+                            Button(modifier = Modifier.width(240.dp),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = White, contentColor = Color.hsv(0f, 0f, 0.13f)),
+                                onClick = {
+                                    state.value = State.Commands
+                                    but = it
+                                }) {
+                                Text("Результат команды")
+                            }
                         }
                     }
                 }
