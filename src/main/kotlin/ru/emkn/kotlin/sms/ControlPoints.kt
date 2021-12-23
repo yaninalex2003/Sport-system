@@ -160,3 +160,29 @@ fun timeToString(number: Int): String {
     return if (number % 60 < 10) "${12 + number / 60}:0${number % 60}:00"
     else "${12 + number / 60}:${number % 60}:00"
 }
+
+fun makeSportsmanFromTeamList(line: CSVRecord, teamname: String): Sportsman {
+    val name = line.get(1)
+    val surname = line.get(2)
+    val newSportsman = Sportsman(name, surname)
+    newSportsman.team = teamname
+    newSportsman.birthday = line.get(3).toInt()
+    newSportsman.rank = line.get(4)
+    newSportsman.groupName = line.get(0)
+    return newSportsman
+}
+
+fun makeListSprotsmen(nameFile: String): List<Sportsman>{
+    val file = File("./application/${nameFile}.csv")
+    val reader = file.bufferedReader()
+    val numberOfPerson = reader.readLine().split(",")[0].toInt()
+    val csvParser = CSVParser(
+        reader, CSVFormat.DEFAULT
+            .withTrim()
+    )
+    val ans = mutableListOf<Sportsman>()
+    csvParser.forEach {
+        ans.add(makeSportsmanFromTeamList(it, nameFile))
+    }
+    return ans
+}
