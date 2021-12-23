@@ -10,11 +10,12 @@ import androidx.compose.ui.unit.dp
 import java.io.File
 
 enum class State {
-    Groups, Distance, Commands, Participants, Marks, GroupInfo, TeamInfo
+    Groups, Distance, Commands, Participants, Marks, GroupInfo, TeamInfo, DistanceInfo
 }
 
 class UI(private val state: MutableState<State>) {
     var but = ""
+    var dist = ""
 
     @Composable
     fun navigation() = Row(Modifier.fillMaxWidth()) {
@@ -50,6 +51,7 @@ class UI(private val state: MutableState<State>) {
             State.Marks -> marks()
             State.GroupInfo -> groupInfo(but)
             State.TeamInfo -> teamInfo(but)
+            State.DistanceInfo -> distanceInfo(dist)
         }
     }
 
@@ -115,6 +117,32 @@ class UI(private val state: MutableState<State>) {
         ) {
             Column {
                 for (element in distances) {
+                    if (element.isNotEmpty()) {
+                        Button(modifier = Modifier.width(240.dp),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Red),
+                            onClick = {
+                                state.value = State.DistanceInfo
+                                dist = element
+                            }) {
+                            Text(element)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @Composable
+    fun distanceInfo(dist: String){
+        val information: List<String> = scanFile1("./distances_information/${dist}").toList()
+        val stateVertical = rememberScrollState(0)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(stateVertical)
+                .padding(end = 12.dp, bottom = 12.dp)
+        ) {
+            Column {
+                for (element in information) {
                     Row {
                         Text(element)
                     }
@@ -169,6 +197,8 @@ class UI(private val state: MutableState<State>) {
             }
         }
     }
+
+
 
     @Composable
     fun partic() = table(
