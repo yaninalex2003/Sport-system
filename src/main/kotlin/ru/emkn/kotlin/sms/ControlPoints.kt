@@ -194,11 +194,11 @@ fun makeListSprotsmen(nameFile: String): List<Sportsman>{
     return ans
 }
 
-fun allSportsmenInOneTeam(but: String): List<Sportsman>{
-    val files = File("./applications").listFiles()?.toList() ?: listOf()
-    val ans = mutableListOf<Sportsman>()
-    files.forEach {
-        ans += makeListSprotsmen(it.name)
+fun sportsmenInOneTeamAsListOfList(name: String): List<List<String>>{
+    val person = makeListSprotsmen("$name.csv")
+    val ans = mutableListOf<List<String>>()
+    person.forEach {
+        ans.add(listOf(it.groupName, it.name, it.surname, it.birthday.toString(), it.rank))
     }
     return ans
 }

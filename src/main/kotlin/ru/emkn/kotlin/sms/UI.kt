@@ -82,10 +82,13 @@ class UI(private val state: MutableState<State>) {
         ) {
             Column {
                 buttons.forEach {
-                    Row  (modifier = Modifier.fillMaxSize(), Arrangement.spacedBy(4.dp)){
+                    Row(modifier = Modifier.fillMaxSize(), Arrangement.spacedBy(4.dp)) {
                         Text(it, modifier = Modifier.width(200.dp), color = White)
                         Button(modifier = Modifier.width(240.dp),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = White, contentColor = Color.hsv(0f, 0f, 0.13f)),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = White,
+                                contentColor = Color.hsv(0f, 0f, 0.13f)
+                            ),
                             onClick = {
                                 state.value = State.GroupStart
                                 but = it
@@ -93,7 +96,10 @@ class UI(private val state: MutableState<State>) {
                             Text("Стартовый протокол")
                         }
                         Button(modifier = Modifier.width(240.dp),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = White, contentColor = Color.hsv(0f, 0f, 0.13f)),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = White,
+                                contentColor = Color.hsv(0f, 0f, 0.13f)
+                            ),
                             onClick = {
                                 state.value = State.GroupFinish
                                 but = it
@@ -158,7 +164,10 @@ class UI(private val state: MutableState<State>) {
                 for (element in distances) {
                     if (element.isNotEmpty()) {
                         Button(modifier = Modifier.width(240.dp),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = White, contentColor = Color.hsv(0f, 0f, 0.13f)),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = White,
+                                contentColor = Color.hsv(0f, 0f, 0.13f)
+                            ),
                             onClick = {
                                 state.value = State.DistanceInfo
                                 dist = element
@@ -212,57 +221,74 @@ class UI(private val state: MutableState<State>) {
                     },
                     label = { Text("Path to CSV or directory") }
                 )
-                Button(onClick = { load() }, colors = ButtonDefaults.buttonColors(backgroundColor = White, contentColor = Color.hsv(0f, 0f, 0.13f))) { Text("Import") }
+                Button(
+                    onClick = { load() },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = White,
+                        contentColor = Color.hsv(0f, 0f, 0.13f)
+                    )
+                ) { Text("Import") }
             }
-            Row() {
-                Column {
-                    buttons.forEach {
-                        Row {
-                            Text("  $it", modifier = Modifier.width(200.dp), color = White)
-                            Button(modifier = Modifier.width(240.dp),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = White, contentColor = Color.hsv(0f, 0f, 0.13f)),
-                                onClick = {
-                                    state.value = State.Commands
-                                    but = it
-                                }) {
-                                Text("Список команды")
-                            }
-                            Button(modifier = Modifier.width(240.dp),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = White, contentColor = Color.hsv(0f, 0f, 0.13f)),
-                                onClick = {
-                                    state.value = State.Commands
-                                    but = it
-                                }) {
-                                Text("Результат команды")
-                            }
+            Column {
+                buttons.forEach {
+                    Row (modifier = Modifier.fillMaxSize(), Arrangement.spacedBy(4.dp)){
+                        Text("  $it", modifier = Modifier.width(200.dp), color = White)
+                        Button(modifier = Modifier.width(240.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = White,
+                                contentColor = Color.hsv(0f, 0f, 0.13f)
+                            ),
+                            onClick = {
+                                state.value = State.TeamPeople
+                                but = it
+                            }) {
+                            Text("Список команды")
+                        }
+                        Button(modifier = Modifier.width(240.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = White,
+                                contentColor = Color.hsv(0f, 0f, 0.13f)
+                            ),
+                            onClick = {
+                                state.value = State.TeamPeople
+                                but = it
+                            }) {
+                            Text("Результат команды")
                         }
                     }
                 }
             }
+
         }
     }
 
     @Composable
     fun teamPeople(but: String) {
-        if (ControlPoints(but).files.isEmpty()) {
-            Text("  Файл пуст")
-            return
-        }
         val stateVertical = rememberScrollState(0)
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(stateVertical)
-                .padding(end = 12.dp, bottom = 12.dp)
+                .padding(end = 12.dp, bottom = 12.dp),
+            Arrangement.spacedBy(7.dp)
         ) {
+            Row {
+                Text("  ГРУППА", modifier = Modifier.width(200.dp), color = White)
+                Text("  ФАМИЛИЯ", modifier = Modifier.width(200.dp), color = White)
+                Text("  ИМЯ", modifier = Modifier.width(200.dp), color = White)
+                Text("  ГОД РОЖДЕНИЯ", modifier = Modifier.width(200.dp), color = White)
+                Text("  РАЗРЯД", modifier = Modifier.width(200.dp), color = White)
+            }
             table(
-                ControlPoints(but).getGroupAsListOfList()
+                sportsmenInOneTeamAsListOfList(but)
             )
         }
+
     }
 
     private fun load() {
-        try{val target = File(this.import_var)
+        try {
+            val target = File(this.import_var)
             this.state.value = State.Marks
             this.state.value = State.Commands
             if (target.isDirectory) {
@@ -272,7 +298,10 @@ class UI(private val state: MutableState<State>) {
             }
             if (target.isFile && target.extension == "csv") {
                 target.copyTo(File("./applications/${target.name}"))
-            }}catch (e: Exception) { println(e.message) }
+            }
+        } catch (e: Exception) {
+            println(e.message)
+        }
     }
 
     @Composable
@@ -281,42 +310,68 @@ class UI(private val state: MutableState<State>) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(stateVertical),
-            //.padding(end = 12.dp, bottom = 12.dp),
+                .verticalScroll(stateVertical)
+                .padding(end = 12.dp, bottom = 12.dp),
             Arrangement.spacedBy(7.dp)
         ) {
             Row {
-                Button(onClick =
-                {
-                    sort_key = 0
-                    state.value = State.Groups
-                    state.value = State.Participants
-                }, modifier = Modifier.width(200.dp)) { Text("ГРУППА", modifier = Modifier.width(200.dp), color = White) }
+                Button(
+                    onClick =
+                    {
+                        sort_key = 0
+                        state.value = State.Groups
+                        state.value = State.Participants
+                    }, modifier = Modifier.width(200.dp)
+                ) { Text("ГРУППА", modifier = Modifier.width(200.dp), color = White) }
                 Button(onClick = {
                     sort_key = 1
                     state.value = State.Groups
                     state.value = State.Participants
-                }, modifier = Modifier.width(200.dp)) {Text("ФАМИЛИЯ", modifier = Modifier.width(200.dp), color = White)}
+                }, modifier = Modifier.width(200.dp)) {
+                    Text(
+                        "ФАМИЛИЯ",
+                        modifier = Modifier.width(200.dp),
+                        color = White
+                    )
+                }
                 Button(onClick = {
                     sort_key = 2
                     state.value = State.Groups
                     state.value = State.Participants
-                }, modifier = Modifier.width(200.dp)) {Text("ИМЯ", modifier = Modifier.width(200.dp), color = White)}
+                }, modifier = Modifier.width(200.dp)) { Text("ИМЯ", modifier = Modifier.width(200.dp), color = White) }
                 Button(onClick = {
                     sort_key = 3
                     state.value = State.Groups
                     state.value = State.Participants
-                }, modifier = Modifier.width(200.dp)) {Text("КОМАНДА", modifier = Modifier.width(200.dp), color = White)}
+                }, modifier = Modifier.width(200.dp)) {
+                    Text(
+                        "КОМАНДА",
+                        modifier = Modifier.width(200.dp),
+                        color = White
+                    )
+                }
                 Button(onClick = {
                     sort_key = 4
                     state.value = State.Groups
                     state.value = State.Participants
-                }, modifier = Modifier.width(200.dp)) {Text("РАЗРЯД", modifier = Modifier.width(200.dp), color = White)}
+                }, modifier = Modifier.width(200.dp)) {
+                    Text(
+                        "РАЗРЯД",
+                        modifier = Modifier.width(200.dp),
+                        color = White
+                    )
+                }
                 Button(onClick = {
                     sort_key = 5
                     state.value = State.Groups
                     state.value = State.Participants
-                }, modifier = Modifier.width(200.dp)) {Text("ГОД РОЖДЕНИЯ", modifier = Modifier.width(200.dp), color = White)}
+                }, modifier = Modifier.width(200.dp)) {
+                    Text(
+                        "ГОД РОЖДЕНИЯ",
+                        modifier = Modifier.width(200.dp),
+                        color = White
+                    )
+                }
             }
             table(
                 allSportsmenAsListOfList().sortedBy { it[sort_key] }
@@ -366,7 +421,8 @@ class UI(private val state: MutableState<State>) {
     }
 
     private fun load_marks() {
-        try {val target = File(this.marks_var)
+        try {
+            val target = File(this.marks_var)
             this.state.value = State.Commands
             this.state.value = State.Marks
             if (target.isDirectory) {
@@ -378,7 +434,10 @@ class UI(private val state: MutableState<State>) {
                     }
                 } ?: ""
             }
-        } catch (e: Exception) { println(e.message) }}
+        } catch (e: Exception) {
+            println(e.message)
+        }
+    }
 }
 
 fun getGroupNames(): List<String> {

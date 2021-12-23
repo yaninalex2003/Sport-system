@@ -23,8 +23,6 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 
-val logger = KotlinLogging.logger {  }
-
 @OptIn(ExperimentalGraphicsApi::class)
 fun main() = application {
     //run{Application().create()}
@@ -42,5 +40,5 @@ fun main() = application {
             }
         }
     }
-    //ControlPoints("Жстуд").getTeamResults()
+    //ControlPoints("Мстуд").getTeamResults()
 }
