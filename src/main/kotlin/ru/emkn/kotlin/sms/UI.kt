@@ -248,12 +248,12 @@ fun scanFile1(fileName: String): Array<String> {
 fun table(matrix: List<List<String>>) {
 
     @Composable
-    fun generate_row(row: List<String>) = Row(modifier = Modifier.padding(5.dp), Arrangement.spacedBy(5.dp)) {
+    fun generate_row(row: List<String>) = Row(modifier = Modifier.padding(0.dp), Arrangement.spacedBy(0.dp)) {
         for (note in row) {
             Text(note, modifier = Modifier.width(200.dp))
         }
     }
-    return Column(modifier = Modifier.padding(5.dp), Arrangement.spacedBy(3.dp)) {
+    return Column(modifier = Modifier.padding(0.dp), Arrangement.spacedBy(0.dp)) {
         for (row in matrix) {
             run { generate_row(row) }
         }
