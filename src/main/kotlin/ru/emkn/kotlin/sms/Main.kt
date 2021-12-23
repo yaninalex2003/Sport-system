@@ -24,6 +24,7 @@ import androidx.compose.ui.window.rememberWindowState
 val logger = KotlinLogging.logger {  }
 
 fun main() = application {
+    run { Application().create() }
     Window(
         onCloseRequest = ::exitApplication,
         title = "Sport Management System Yanix",
