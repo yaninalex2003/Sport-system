@@ -135,8 +135,9 @@ class UI(private val state: MutableState<State>) {
             }
         }
     }
+
     @Composable
-    fun distanceInfo(dist: String){
+    fun distanceInfo(dist: String) {
         val information: List<String> = scanFile1("./distances_information/${dist}").toList()
         val stateVertical = rememberScrollState(0)
         Box(
@@ -159,13 +160,13 @@ class UI(private val state: MutableState<State>) {
     fun comm() {
         val buttons = getTeamNames()
         val stateVertical = rememberScrollState(0)
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(stateVertical), Arrangement.spacedBy(5.dp)
         ) {
             var text by rememberSaveable { mutableStateOf("") }
-            Row (modifier = Modifier.align(Alignment.Start).height(100.dp), Arrangement.spacedBy(10.dp)){
+            Row(modifier = Modifier.align(Alignment.Start).height(100.dp), Arrangement.spacedBy(10.dp)) {
                 TextField(
                     modifier = Modifier.fillMaxWidth(0.5f),
                     value = text,
@@ -175,7 +176,7 @@ class UI(private val state: MutableState<State>) {
                     },
                     label = { Text("Path to CSV or directory") }
                 )
-                Button(onClick = { load() }) { Text("Import")}
+                Button(onClick = { load() }) { Text("Import") }
             }
             Row() {
                 Column {
@@ -233,12 +234,21 @@ class UI(private val state: MutableState<State>) {
     @Composable
     fun partic() {
         val stateVertical = rememberScrollState(0)
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(stateVertical)
-                .padding(end = 12.dp, bottom = 12.dp)
+                .verticalScroll(stateVertical),
+                //.padding(end = 12.dp, bottom = 12.dp),
+            Arrangement.spacedBy(7.dp)
         ) {
+            Row {
+                Text("ГРУППА", modifier = Modifier.width(200.dp))
+                Text("ФАМИЛИЯ", modifier = Modifier.width(200.dp))
+                Text("ИМЯ", modifier = Modifier.width(200.dp))
+                Text("КОМАНДА", modifier = Modifier.width(200.dp))
+                Text("РАЗРЯД", modifier = Modifier.width(200.dp))
+                Text("ГОД РОЖДЕНИЯ", modifier = Modifier.width(200.dp))
+            }
             table(
                 allSportsmenAsListOfList()
             )

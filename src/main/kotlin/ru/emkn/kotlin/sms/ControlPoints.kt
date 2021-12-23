@@ -167,7 +167,7 @@ fun makeSportsmanFromTeamList(line: CSVRecord, teamname: String): Sportsman {
     val newSportsman = Sportsman(name, surname)
     newSportsman.team = teamname
     newSportsman.birthday = line.get(3).toInt()
-    newSportsman.rank = line.get(4)
+    newSportsman.rank = line.get(4).ifEmpty { "-" }
     newSportsman.groupName = line.get(0)
     return newSportsman
 }
@@ -201,7 +201,8 @@ fun allSportsmenAsListOfList(): List<List<String>>{
     val people = allSportsmen()
     val ans = mutableListOf<List<String>>()
     people.forEach {
-        ans.add(listOf(it.name, it.surname, it.rank))
+        ans.add(listOf(it.groupName, it.name, it.surname, it.team, it.rank, it.birthday.toString()))
     }
     return ans
 }
+
