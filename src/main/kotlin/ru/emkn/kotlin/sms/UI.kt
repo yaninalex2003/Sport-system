@@ -8,15 +8,14 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.unit.dp
 import java.io.File
-import androidx.compose.ui.graphics.Color
-import org.jetbrains.skia.paragraph.TextBox
 
 enum class State {
     Groups, Distance, Commands, Participants, Marks, QWE
 }
 
 class UI(private val state: MutableState<State>) {
-    var but: String = "Ж14"
+    var but = ""
+
     @Composable
     fun navigation() = Row(Modifier.fillMaxWidth()) {
         Button(modifier = Modifier.width(240.dp),
@@ -64,17 +63,21 @@ class UI(private val state: MutableState<State>) {
                 .padding(end = 12.dp, bottom = 12.dp)
         ) {
             Column {
-                for (but1 in buttons) {
-                    but = but1
+                for (but_name in buttons) {
                     Button(modifier = Modifier.width(240.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = Red),
-                        onClick = {state.value = State.QWE}) {
-                        Text(but)
+                        onClick = {
+                            state.value = State.QWE
+                            but = but_name
+                        }) {
+                        Text(but_name)
                     }
                 }
             }
         }
     }
+
+    private fun GET(): Any = {}
 
     @Composable
     fun groupRes(but: String) {
@@ -152,7 +155,7 @@ class UI(private val state: MutableState<State>) {
 
 fun getGroupNames(): List<String> {
     val ans = mutableListOf<String>()
-    for (file in File("./groups").listFiles().toList()) {
+    for (file in File("./groups").listFiles()?.toList() ?: listOf()) {
         ans.add(file.name.substring(0, file.name.length - 4))
     }
     return ans
