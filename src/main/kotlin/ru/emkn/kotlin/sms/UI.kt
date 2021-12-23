@@ -70,7 +70,7 @@ class UI(private val state: MutableState<State>) {
         ) {
             Column {
                 buttons.forEach {
-                    Row{
+                    Row  (modifier = Modifier.fillMaxSize(), Arrangement.spacedBy(4.dp)){
                         Text(it, modifier = Modifier.width(200.dp))
                         Button(modifier = Modifier.width(240.dp),
                             colors = ButtonDefaults.buttonColors(backgroundColor = Red),
