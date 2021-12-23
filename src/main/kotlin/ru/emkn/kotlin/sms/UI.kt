@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import java.io.File
 
 enum class State {
-    Groups, Distance, Commands, Participants, Marks, QWE
+    Groups, Distance, Commands, Participants, Marks, GroupInfo, TeamInfo
 }
 
 class UI(private val state: MutableState<State>) {
@@ -48,7 +48,8 @@ class UI(private val state: MutableState<State>) {
             State.Commands -> comm()
             State.Participants -> partic()
             State.Marks -> marks()
-            State.QWE -> groupRes(but)
+            State.GroupInfo -> groupInfo(but)
+            State.TeamInfo -> teamInfo(but)
         }
     }
 
@@ -67,7 +68,7 @@ class UI(private val state: MutableState<State>) {
                     Button(modifier = Modifier.width(240.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = Red),
                         onClick = {
-                            state.value = State.QWE
+                            state.value = State.GroupInfo
                             but = but_name
                         }) {
                         Text(but_name)
@@ -77,10 +78,8 @@ class UI(private val state: MutableState<State>) {
         }
     }
 
-    private fun GET(): Any = {}
-
     @Composable
-    fun groupRes(but: String) {
+    fun groupInfo(but: String) {
         if (ControlPoints(but).files.isEmpty()){
             Text("Файл пуст")
             return
@@ -140,6 +139,31 @@ class UI(private val state: MutableState<State>) {
                         colors = ButtonDefaults.buttonColors(backgroundColor = Red),
                         onClick = { state.value = State.Commands }) {
                         Text(but)
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun teamInfo(but: String){
+        if (ControlPoints(but).files.isEmpty()){
+            Text("Файл пуст")
+            return
+        }
+        val people = ControlPoints(but).makeFinishResults()
+        val stateVertical = rememberScrollState(0)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(stateVertical)
+                .padding(end = 12.dp, bottom = 12.dp)
+        ) {
+            Column {
+                for (chel in people.sportsmen) {
+                    Row {
+                        Text(chel.name)
+                        Text(chel.surname)
                     }
                 }
             }
