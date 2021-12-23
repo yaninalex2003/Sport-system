@@ -288,7 +288,7 @@ class UI(private val state: MutableState<State>) {
 
     @Composable
     fun marks() = Box {
-//        val res = getTeamNames()
+        val res = getGroupNames()
         val stateVertical = rememberScrollState(0)
         Column(
             modifier = Modifier
@@ -307,7 +307,9 @@ class UI(private val state: MutableState<State>) {
                     label = { Text("Path to directory") }
                 )
                 Button(onClick = { load_marks() }) { Text("Import") }
-                Button(onClick = {  }) { Text("Results!") }
+                Button(onClick = { res.forEach {
+                    ControlPoints(it).makeFinishResultsInFile()
+                } }) { Text("Results!") }
             }
 //            Row() {
 //                Column {
