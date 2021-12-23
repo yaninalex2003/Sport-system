@@ -134,11 +134,10 @@ class UI(private val state: MutableState<State>) {
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(stateVertical)
-                .padding(end = 12.dp, bottom = 12.dp), Arrangement.spacedBy(5.dp)
+                .verticalScroll(stateVertical), Arrangement.spacedBy(5.dp)
         ) {
             var text by rememberSaveable { mutableStateOf("") }
-            Row (modifier = Modifier.align(Alignment.Start).height(300.dp), Arrangement.spacedBy(10.dp)){
+            Row (modifier = Modifier.align(Alignment.Start).height(100.dp), Arrangement.spacedBy(10.dp)){
                 TextField(
                     modifier = Modifier.fillMaxWidth(0.5f),
                     value = text,
@@ -150,12 +149,14 @@ class UI(private val state: MutableState<State>) {
                 )
                 Button(onClick = { load() }) { Text("Import")}
             }
-            Column {
-                for (but in buttons) {
-                    Button(modifier = Modifier.width(240.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Red),
-                        onClick = { state.value = State.Commands }) {
-                        Text(but)
+            Row() {
+                Column {
+                    for (but in buttons) {
+                        Button(modifier = Modifier.width(240.dp),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Red),
+                            onClick = { state.value = State.Commands }) {
+                            Text(but)
+                        }
                     }
                 }
             }
