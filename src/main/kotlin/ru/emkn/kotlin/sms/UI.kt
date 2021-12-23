@@ -4,10 +4,13 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color.Companion.Red
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import java.io.File
+import javax.accessibility.AccessibleEditableText
 
 enum class State {
     Groups, Distance, Commands, Participants, Marks, GroupInfo, TeamInfo
@@ -15,6 +18,7 @@ enum class State {
 
 class UI(private val state: MutableState<State>) {
     var but = ""
+    var import_var = "./applications"
 
     @Composable
     fun navigation() = Row(Modifier.fillMaxWidth()) {
@@ -127,12 +131,25 @@ class UI(private val state: MutableState<State>) {
     fun comm() {
         val buttons = getTeamNames()
         val stateVertical = rememberScrollState(0)
-        Box(
+        Column (
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(stateVertical)
-                .padding(end = 12.dp, bottom = 12.dp)
+                .padding(end = 12.dp, bottom = 12.dp), Arrangement.spacedBy(5.dp)
         ) {
+            var text by rememberSaveable { mutableStateOf("") }
+            Row (modifier = Modifier.align(Alignment.Start).height(300.dp), Arrangement.spacedBy(10.dp)){
+                TextField(
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    value = text,
+                    onValueChange = {
+                        text = it
+                        import_var = it
+                    },
+                    label = { Text("Path to CSV or directory") }
+                )
+                Button(onClick = { load() }) { Text("Import")}
+            }
             Column {
                 for (but in buttons) {
                     Button(modifier = Modifier.width(240.dp),
@@ -142,6 +159,18 @@ class UI(private val state: MutableState<State>) {
                     }
                 }
             }
+        }
+    }
+
+    private fun load() {
+        val target = File(this.import_var)
+        if (target.isDirectory) {
+            target.listFiles()?.forEach {
+                if (it.extension == "csv") it.copyTo(File("./applications/${it.name}"))
+            } ?: ""
+        }
+        if (target.isFile && target.extension == "csv") {
+            target.copyTo(File("./applications/${target.name}"))
         }
     }
 
