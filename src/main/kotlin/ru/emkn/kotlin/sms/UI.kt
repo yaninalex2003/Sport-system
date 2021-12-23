@@ -164,6 +164,8 @@ class UI(private val state: MutableState<State>) {
 
     private fun load() {
         val target = File(this.import_var)
+        this.state.value = State.Marks
+        this.state.value = State.Commands
         if (target.isDirectory) {
             target.listFiles()?.forEach {
                 if (it.extension == "csv") it.copyTo(File("./applications/${it.name}"))
@@ -248,7 +250,7 @@ fun table(matrix: List<List<String>>) {
     @Composable
     fun generate_row(row: List<String>) = Row(modifier = Modifier.padding(5.dp), Arrangement.spacedBy(5.dp)) {
         for (note in row) {
-            Button(onClick = {}) { Text(note) }
+            Text(note, modifier = Modifier.width(200.dp))
         }
     }
     return Column(modifier = Modifier.padding(5.dp), Arrangement.spacedBy(3.dp)) {
