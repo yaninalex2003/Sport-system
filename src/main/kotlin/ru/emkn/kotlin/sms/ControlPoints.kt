@@ -194,6 +194,15 @@ fun makeListSprotsmen(nameFile: String): List<Sportsman>{
     return ans
 }
 
+fun allSportsmenInOneTeam(but: String): List<Sportsman>{
+    val files = File("./applications").listFiles()?.toList() ?: listOf()
+    val ans = mutableListOf<Sportsman>()
+    files.forEach {
+        ans += makeListSprotsmen(it.name)
+    }
+    return ans
+}
+
 fun allSportsmen(): List<Sportsman>{
     val files = File("./applications").listFiles()?.toList() ?: listOf()
     val ans = mutableListOf<Sportsman>()

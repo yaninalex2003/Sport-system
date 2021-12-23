@@ -15,12 +15,11 @@ import androidx.compose.ui.unit.dp
 import java.io.File
 
 enum class State {
-    Groups, Distance, Commands, Participants, Marks, GroupStart, GroupFinish, TeamInfo, DistanceInfo, TeamResult
+    Groups, Distance, Commands, Participants, Marks, GroupStart, GroupFinish, TeamPeople, DistanceInfo
 }
 
 @ExperimentalGraphicsApi
 class UI(private val state: MutableState<State>) {
-    var team=""
     var sort_key = 0
     var but = ""
     var dist = ""
@@ -33,10 +32,12 @@ class UI(private val state: MutableState<State>) {
             onClick = { state.value = State.Groups }) {
             Text("Группы")
         }
+
         Button(modifier = Modifier.width(240.dp),
             onClick = { state.value = State.Commands }) {
             Text("Команды")
         }
+
         Button(modifier = Modifier.width(240.dp),
             onClick = { state.value = State.Participants }) {
             Text("Участники")
@@ -63,10 +64,9 @@ class UI(private val state: MutableState<State>) {
             State.Participants -> partic()
             State.Marks -> marks()
             State.GroupStart -> groupStart(but)
-            State.TeamInfo -> teamInfo(but)
             State.DistanceInfo -> distanceInfo(dist)
             State.GroupFinish -> groupFinish(but)
-            State.TeamResult -> teamResult(team)
+            State.TeamPeople -> teamPeople(but)
         }
     }
 
@@ -230,8 +230,8 @@ class UI(private val state: MutableState<State>) {
                             Button(modifier = Modifier.width(240.dp),
                                 colors = ButtonDefaults.buttonColors(backgroundColor = White, contentColor = Color.hsv(0f, 0f, 0.13f)),
                                 onClick = {
-                                    state.value = State.TeamResult
-                                    team = it
+                                    state.value = State.Commands
+                                    but = it
                                 }) {
                                 Text("Результат команды")
                             }
@@ -243,12 +243,21 @@ class UI(private val state: MutableState<State>) {
     }
 
     @Composable
-    fun teamResult(team:String){
-        val result: List<String> = scanFile1("./team_results/${team}").toList()
-        for (line in result){
-            Row {
-                Text(line)
-            }
+    fun teamPeople(but: String) {
+        if (ControlPoints(but).files.isEmpty()) {
+            Text("  Файл пуст")
+            return
+        }
+        val stateVertical = rememberScrollState(0)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(stateVertical)
+                .padding(end = 12.dp, bottom = 12.dp)
+        ) {
+            table(
+                ControlPoints(but).getGroupAsListOfList()
+            )
         }
     }
 
@@ -264,31 +273,6 @@ class UI(private val state: MutableState<State>) {
             if (target.isFile && target.extension == "csv") {
                 target.copyTo(File("./applications/${target.name}"))
             }}catch (e: Exception) { println(e.message) }
-    }
-
-    @Composable
-    fun teamInfo(but: String) {
-        if (ControlPoints(but).files.isEmpty()) {
-            Text("Файл пуст")
-            return
-        }
-        val people = ControlPoints(but).makeFinishResults()
-        val stateVertical = rememberScrollState(0)
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(stateVertical)
-                .padding(end = 12.dp, bottom = 12.dp)
-        ) {
-            Column {
-                for (chel in people.sportsmen) {
-                    Row {
-                        Text(chel.name, color = Color.hsv(0f, 0f, 0.13f))
-                        Text(chel.surname, color = Color.hsv(0f, 0f, 0.13f))
-                    }
-                }
-            }
-        }
     }
 
     @Composable

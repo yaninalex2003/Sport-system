@@ -42,5 +42,5 @@ fun main() = application {
             }
         }
     }
-    ControlPoints("Жстуд").getTeamResults()
+    //ControlPoints("Жстуд").getTeamResults()
 }
