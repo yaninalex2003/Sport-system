@@ -182,7 +182,7 @@ class UI(private val state: MutableState<State>) {
             Column {
                 for (element in information) {
                     Row {
-                        Text(element, color = White)
+                        Text(element, color = Color.hsv(0f, 0f, 0.13f))
                     }
                 }
             }
