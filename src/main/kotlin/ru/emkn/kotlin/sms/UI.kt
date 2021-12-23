@@ -171,7 +171,12 @@ class UI(private val state: MutableState<State>) {
     }
 
     @Composable
-    fun partic() = Text("Partic")
+    fun partic() = table(
+        listOf(
+            listOf("A", "B"),
+            listOf("B", "c")
+        )
+    )
 
     @Composable
     fun marks() = Text("Marks")
@@ -199,6 +204,22 @@ fun scanFile1(fileName: String): Array<String> {
         fileArray += line
     }
     return fileArray
+}
+
+@Composable
+fun table(matrix: List<List<String>>) {
+
+    @Composable
+    fun generate_row(row: List<String>) = Row(modifier = Modifier.padding(5.dp), Arrangement.spacedBy(5.dp)) {
+        for (note in row) {
+            Button(onClick = {}) { Text(note) }
+        }
+    }
+    return Column (modifier = Modifier.padding(5.dp), Arrangement.spacedBy(3.dp)) {
+        for (row in matrix) {
+            run { generate_row(row) }
+        }
+    }
 }
 
 /*fun getPeople(): List<Sportsman>{
