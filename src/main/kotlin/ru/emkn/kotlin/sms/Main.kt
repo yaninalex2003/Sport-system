@@ -39,5 +39,5 @@ fun main() = application {
             }
         }
     }
-    //ControlPoints("Ж14").makeFinishResultsInFile()
+    //println(ControlPoints("Ж14").makeFinishResults().sportsmen[0].name)
 }

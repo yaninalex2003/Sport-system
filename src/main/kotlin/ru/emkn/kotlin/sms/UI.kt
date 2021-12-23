@@ -73,7 +73,7 @@ class UI(private val state: MutableState<State>) {
             Column {
                 buttons.forEach {
                     Row  (modifier = Modifier.fillMaxSize(), Arrangement.spacedBy(4.dp)){
-                        Text(it, modifier = Modifier.width(200.dp))
+                        Text("  $it", modifier = Modifier.width(200.dp))
                         Button(modifier = Modifier.width(240.dp),
                             colors = ButtonDefaults.buttonColors(backgroundColor = Red),
                             onClick = {
@@ -85,7 +85,7 @@ class UI(private val state: MutableState<State>) {
                         Button(modifier = Modifier.width(240.dp),
                             colors = ButtonDefaults.buttonColors(backgroundColor = Red),
                             onClick = {
-                                state.value = State.GroupStart
+                                state.value = State.GroupFinish
                                 but = it
                             }) {
                             Text("Финишный результат")
@@ -102,7 +102,7 @@ class UI(private val state: MutableState<State>) {
             Text("Файл пуст")
             return
         }
-        val people = ControlPoints(but).makeFinishResults()
+        //val people = ControlPoints(but).makeFinishResults()
         val stateVertical = rememberScrollState(0)
         Box(
             modifier = Modifier
@@ -111,7 +111,7 @@ class UI(private val state: MutableState<State>) {
                 .padding(end = 12.dp, bottom = 12.dp)
         ) {
             table(
-                resultInGroupAsListOfList(people.sportsmen)
+                ControlPoints(but).getGroupAsListOfList()
             )
         }
     }
@@ -122,7 +122,7 @@ class UI(private val state: MutableState<State>) {
             Text("Файл пуст")
             return
         }
-        val people = ControlPoints(but).makeFinishResults()
+        //val people = ControlPoints(but).makeFinishResults()
         val stateVertical = rememberScrollState(0)
         Box(
             modifier = Modifier
@@ -130,14 +130,9 @@ class UI(private val state: MutableState<State>) {
                 .verticalScroll(stateVertical)
                 .padding(end = 12.dp, bottom = 12.dp)
         ) {
-            Column {
-                for (chel in people.sportsmen) {
-                    Row {
-                        Text(chel.name)
-                        Text(chel.surname)
-                    }
-                }
-            }
+            table(
+                ControlPoints(but).resultInGroupAsListOfList()
+            )
         }
     }
 
@@ -398,7 +393,7 @@ fun table(matrix: List<List<String>>) {
     @Composable
     fun generate_row(row: List<String>) = Row(modifier = Modifier.padding(0.dp), Arrangement.spacedBy(0.dp)) {
         for (note in row) {
-            Text(note, modifier = Modifier.width(200.dp))
+            Text("  $note", modifier = Modifier.width(200.dp))
         }
     }
     return Column(modifier = Modifier.padding(0.dp), Arrangement.spacedBy(0.dp)) {
@@ -407,11 +402,3 @@ fun table(matrix: List<List<String>>) {
         }
     }
 }
-
-/*fun getPeople(): List<Sportsman>{
-    val  ans = mutableListOf<Sportsman>()
-    for (file in File("./groups").listFiles().toList()){
-        ans.add(file.name.substring(0,file.name.length-4))
-    }
-    return ans
-}*/
