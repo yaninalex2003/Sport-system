@@ -15,6 +15,7 @@ enum class State {
 }
 
 class UI(private val state: MutableState<State>) {
+    var sort_key = 0
     var but = ""
     var dist = ""
     var import_var = "./applications"
@@ -40,7 +41,7 @@ class UI(private val state: MutableState<State>) {
         }
         Button(modifier = Modifier.width(240.dp),
             onClick = { state.value = State.Marks }) {
-            Text("Список отметок")
+            Text("Отметки и результаты")
         }
     }
 
@@ -273,15 +274,40 @@ class UI(private val state: MutableState<State>) {
             Arrangement.spacedBy(7.dp)
         ) {
             Row {
-                Text("ГРУППА", modifier = Modifier.width(200.dp))
-                Text("ФАМИЛИЯ", modifier = Modifier.width(200.dp))
-                Text("ИМЯ", modifier = Modifier.width(200.dp))
-                Text("КОМАНДА", modifier = Modifier.width(200.dp))
-                Text("РАЗРЯД", modifier = Modifier.width(200.dp))
-                Text("ГОД РОЖДЕНИЯ", modifier = Modifier.width(200.dp))
+                Button(onClick =
+                {
+                    sort_key = 0
+                    state.value = State.Groups
+                    state.value = State.Participants
+                }, modifier = Modifier.width(200.dp)) { Text("ГРУППА", modifier = Modifier.width(200.dp)) }
+                Button(onClick = {
+                    sort_key = 1
+                    state.value = State.Groups
+                    state.value = State.Participants
+                }, modifier = Modifier.width(200.dp)) {Text("ФАМИЛИЯ", modifier = Modifier.width(200.dp))}
+                Button(onClick = {
+                    sort_key = 2
+                    state.value = State.Groups
+                    state.value = State.Participants
+                }, modifier = Modifier.width(200.dp)) {Text("ИМЯ", modifier = Modifier.width(200.dp))}
+                Button(onClick = {
+                    sort_key = 3
+                    state.value = State.Groups
+                    state.value = State.Participants
+                }, modifier = Modifier.width(200.dp)) {Text("КОМАНДА", modifier = Modifier.width(200.dp))}
+                Button(onClick = {
+                    sort_key = 4
+                    state.value = State.Groups
+                    state.value = State.Participants
+                }, modifier = Modifier.width(200.dp)) {Text("РАЗРЯД", modifier = Modifier.width(200.dp))}
+                Button(onClick = {
+                    sort_key = 5
+                    state.value = State.Groups
+                    state.value = State.Participants
+                }, modifier = Modifier.width(200.dp)) {Text("ГОД РОЖДЕНИЯ", modifier = Modifier.width(200.dp))}
             }
             table(
-                allSportsmenAsListOfList()
+                allSportsmenAsListOfList().sortedBy { it[sort_key] }
             )
         }
     }
@@ -307,9 +333,10 @@ class UI(private val state: MutableState<State>) {
                     label = { Text("Path to directory") }
                 )
                 Button(onClick = { load_marks() }) { Text("Import") }
-                Button(onClick = { res.forEach {
-                    ControlPoints(it).makeFinishResultsInFile()
-                } }) { Text("Results!") }
+                Button(onClick = {
+                    res.forEach { ControlPoints(it).makeFinishResultsInFile() }
+                    state.value = State.Groups
+                }) { Text("Results!") }
             }
 //            Row() {
 //                Column {
