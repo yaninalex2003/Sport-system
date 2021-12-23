@@ -42,5 +42,5 @@ fun main() = application {
             }
         }
     }
-    //ControlPoints("Ж14").makeFinishResultsInFile()
+    ControlPoints("Жстуд").getTeamResults()
 }

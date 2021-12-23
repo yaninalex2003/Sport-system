@@ -11,10 +11,15 @@ import java.io.File
 
 class ControlPoints(val groupname: String) {
     val files: List<File>
-        get() {
+        get() = run {
             val dir = File("./control_points/${groupname}")
-            return dir.listFiles()?.toList() ?: listOf()
+            if (dir.isDirectory) {
+                return dir.listFiles()?.toList() ?: listOf()
+            } else {
+                return listOf()
+            }
         }
+
 
     fun getGroup(): Group {
         val groupFile =
@@ -35,6 +40,15 @@ class ControlPoints(val groupname: String) {
         return ans
     }
 
+    fun getGroupAsListOfList(): List<List<String>>{
+        val group = getGroup()
+        val ans = mutableListOf<List<String>>()
+        group.sportsmen.forEach{
+            ans.add(listOf(it.number.toString(), it.name, it.surname, it.team))
+        }
+        return ans
+    }
+
     fun makeFinishResults(): Group {
         val finish = getGroup()
         for (file in files) {
@@ -45,7 +59,7 @@ class ControlPoints(val groupname: String) {
                     .withIgnoreHeaderCase()
                     .withTrim()
             )
-            val person = finish.sportsmen.find { it.number == numberOfPerson }!!
+            val person = finish.sportsmen.find { it.number == numberOfPerson } ?: Sportsman("five", "")
             csvParser.forEach {
                 person.times.add(it.get(1))
             }
@@ -56,6 +70,17 @@ class ControlPoints(val groupname: String) {
         finish.sportsmen = finish.sportsmen.sortedBy { it.finishTimeInSeconds }.toMutableList()
 
         return finish
+    }
+
+    fun resultInGroupAsListOfList(): List<List<String>>{
+        val people = makeFinishResults().sportsmen
+        val ans = mutableListOf<List<String>>()
+        var place = 0
+        people.forEach {
+            place +=1
+            ans.add(listOf(place.toString(), it.name, it.surname, it.team, it.finishTime))
+        }
+        return ans
     }
 
     fun  makeFinishResultsInFile() {
@@ -85,40 +110,25 @@ class ControlPoints(val groupname: String) {
         csvPrinter.flush()
         csvPrinter.close()
     }
-    fun getTeamResults() {
-        val finish = getGroup()
-        for (file in files){
-            val reader = file.bufferedReader()
-            val numberOfPerson = reader.readLine().split(",")[0].toInt()
-            val csvParser = CSVParser(
-                reader, CSVFormat.DEFAULT
-                    .withIgnoreHeaderCase()
-                    .withTrim()
-            )
-            val person = finish.sportsmen.find { it.number == numberOfPerson }!!
-            csvParser.forEach {
-                person.times.add(it.get(1))
-            }
-            person.finishTime = person.times.last()
-            person.finishTimeInSeconds = timeToSeconds(person.finishTime)
-        }
 
-        finish.sportsmen = finish.sportsmen.sortedBy { it.finishTimeInSeconds }.toMutableList()
-        val winnerTime = timeToSeconds(finish.sportsmen.sortedBy { timeToSeconds(it.finishTime) }[0].finishTime)
+    fun getTeamResults() {
+        val finish = makeFinishResults()
+        val winnerTime = timeToSeconds(finish.sportsmen[0].finishTime)
         val result = finish.sportsmen.groupBy { it.team }
-        for (i in result.keys) {
+        for (key in result.keys) {
             val file =
-                File("./team_results/${i}_result")
+                File("./team_results/${key}_result")
             val writer = file.bufferedWriter()
             val csvPrinter = CSVPrinter(
                 writer, CSVFormat.DEFAULT
-                    .withHeader(i, "", "", "", "", "", "")
+                    .withHeader(key, "", "", "", "", "", "")
             )
             var number = 1
-            for (person in result[i]!!) {
+            for (person in result[key]!!) {
                 csvPrinter.printRecord(
                     listOf(
                         number,
+                        person.groupName,
                         person.number,
                         person.surname,
                         person.name,
@@ -198,16 +208,6 @@ fun allSportsmenAsListOfList(): List<List<String>>{
     val ans = mutableListOf<List<String>>()
     people.forEach {
         ans.add(listOf(it.groupName, it.name, it.surname, it.team, it.rank, it.birthday.toString()))
-    }
-    return ans
-}
-
-fun resultInGroupAsListOfList(people: List<Sportsman>): List<List<String>>{
-    val ans = mutableListOf<List<String>>()
-    var place = 0
-    people.forEach {
-        place +=1
-        ans.add(listOf(place.toString(), it.name, it.surname))
     }
     return ans
 }
