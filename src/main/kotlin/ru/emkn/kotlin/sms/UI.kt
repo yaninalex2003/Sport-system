@@ -245,7 +245,11 @@ class UI(private val state: MutableState<State>) {
     @Composable
     fun teamResult(team:String){
         val result: List<String> = scanFile1("./team_results/${team}").toList()
-
+        for (line in result){
+            Row {
+                Text(line)
+            }
+        }
     }
 
     private fun load() {
