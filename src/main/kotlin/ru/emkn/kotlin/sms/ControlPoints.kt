@@ -206,3 +206,13 @@ fun allSportsmenAsListOfList(): List<List<String>>{
     return ans
 }
 
+fun resultInGroupAsListOfList(people: List<Sportsman>): List<List<String>>{
+    val ans = mutableListOf<List<String>>()
+    var place = 0
+    people.forEach {
+        place +=1
+        ans.add(listOf(place.toString(), it.name, it.surname))
+    }
+    return ans
+}
+

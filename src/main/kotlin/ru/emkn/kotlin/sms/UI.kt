@@ -109,14 +109,9 @@ class UI(private val state: MutableState<State>) {
                 .verticalScroll(stateVertical)
                 .padding(end = 12.dp, bottom = 12.dp)
         ) {
-            Column {
-                for (chel in people.sportsmen) {
-                    Row {
-                        Text(chel.name)
-                        Text(chel.surname)
-                    }
-                }
-            }
+            table(
+                resultInGroupAsListOfList(people.sportsmen)
+            )
         }
     }
 
