@@ -38,5 +38,5 @@ fun main() = application {
             }
         }
     }
-    //ControlPoints("Ж14").makeFinishResults()
+    //ControlPoints("Ж14").makeFinishResultsInFile()
 }

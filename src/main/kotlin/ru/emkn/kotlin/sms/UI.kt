@@ -12,11 +12,11 @@ import androidx.compose.ui.graphics.Color
 import org.jetbrains.skia.paragraph.TextBox
 
 enum class State {
-    Groups, Distance, Commands, Participants, Marks
+    Groups, Distance, Commands, Participants, Marks, QWE
 }
 
 class UI(private val state: MutableState<State>) {
-
+    var but: String = "Ж14"
     @Composable
     fun navigation() = Row(Modifier.fillMaxWidth()) {
         Button(modifier = Modifier.width(240.dp),
@@ -49,6 +49,7 @@ class UI(private val state: MutableState<State>) {
             State.Commands -> comm()
             State.Participants -> partic()
             State.Marks -> marks()
+            State.QWE -> groupRes(but)
         }
     }
 
@@ -63,10 +64,11 @@ class UI(private val state: MutableState<State>) {
                 .padding(end = 12.dp, bottom = 12.dp)
         ) {
             Column {
-                for (but in buttons) {
+                for (but1 in buttons) {
+                    but = but1
                     Button(modifier = Modifier.width(240.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = Red),
-                        onClick = { state.value = groupRes(but) }) {
+                        onClick = {state.value = State.QWE}) {
                         Text(but)
                     }
                 }
@@ -76,6 +78,10 @@ class UI(private val state: MutableState<State>) {
 
     @Composable
     fun groupRes(but: String) {
+        if (ControlPoints(but).files.isEmpty()){
+            Text("Файл пуст")
+            return
+        }
         val people = ControlPoints(but).makeFinishResults()
         val stateVertical = rememberScrollState(0)
         Box(
@@ -86,14 +92,9 @@ class UI(private val state: MutableState<State>) {
         ) {
             Column {
                 for (chel in people.sportsmen) {
-                    Row { }
-                    Button(modifier = Modifier.width(240.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Red),
-                        onClick = {
-                            state.value =
-
-                        }) {
-                        Text(but)
+                    Row {
+                        Text(chel.name)
+                        Text(chel.surname)
                     }
                 }
             }

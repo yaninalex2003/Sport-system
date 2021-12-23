@@ -11,7 +11,7 @@ import java.io.File
 
 class ControlPoints(val groupname: String) {
     val files: List<File> =
-        File("./control_points/${groupname}").listFiles()
+        File("./control_points/${groupname}").listFiles()!!
             .toList()
 
     fun getGroup(): Group {
