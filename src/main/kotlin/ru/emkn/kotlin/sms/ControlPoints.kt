@@ -173,16 +173,35 @@ fun makeSportsmanFromTeamList(line: CSVRecord, teamname: String): Sportsman {
 }
 
 fun makeListSprotsmen(nameFile: String): List<Sportsman>{
-    val file = File("./application/${nameFile}.csv")
+    val file = File("./applications/${nameFile}")
     val reader = file.bufferedReader()
-    val numberOfPerson = reader.readLine().split(",")[0].toInt()
     val csvParser = CSVParser(
         reader, CSVFormat.DEFAULT
+            .withIgnoreHeaderCase()
+            .withFirstRecordAsHeader()
             .withTrim()
     )
     val ans = mutableListOf<Sportsman>()
     csvParser.forEach {
-        ans.add(makeSportsmanFromTeamList(it, nameFile))
+        ans.add(makeSportsmanFromTeamList(it, nameFile.substring(0, nameFile.length-4)))
+    }
+    return ans
+}
+
+fun allSportsmen(): List<Sportsman>{
+    val files = File("./applications").listFiles()?.toList() ?: listOf()
+    val ans = mutableListOf<Sportsman>()
+    files.forEach {
+        ans += makeListSprotsmen(it.name)
+    }
+    return ans
+}
+
+fun allSportsmenAsListOfList(): List<List<String>>{
+    val people = allSportsmen()
+    val ans = mutableListOf<List<String>>()
+    people.forEach {
+        ans.add(listOf(it.name, it.surname, it.rank))
     }
     return ans
 }

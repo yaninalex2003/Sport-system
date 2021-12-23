@@ -80,7 +80,7 @@ class UI(private val state: MutableState<State>) {
 
     @Composable
     fun groupInfo(but: String) {
-        if (ControlPoints(but).files.isEmpty()){
+        if (ControlPoints(but).files.isEmpty()) {
             Text("Файл пуст")
             return
         }
@@ -146,8 +146,8 @@ class UI(private val state: MutableState<State>) {
     }
 
     @Composable
-    fun teamInfo(but: String){
-        if (ControlPoints(but).files.isEmpty()){
+    fun teamInfo(but: String) {
+        if (ControlPoints(but).files.isEmpty()) {
             Text("Файл пуст")
             return
         }
@@ -171,12 +171,19 @@ class UI(private val state: MutableState<State>) {
     }
 
     @Composable
-    fun partic() = table(
-        listOf(
-            listOf("A", "B"),
-            listOf("B", "c")
-        )
-    )
+    fun partic() {
+        val stateVertical = rememberScrollState(0)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(stateVertical)
+                .padding(end = 12.dp, bottom = 12.dp)
+        ) {
+            table(
+                allSportsmenAsListOfList()
+            )
+        }
+    }
 
     @Composable
     fun marks() = Text("Marks")
@@ -215,7 +222,7 @@ fun table(matrix: List<List<String>>) {
             Button(onClick = {}) { Text(note) }
         }
     }
-    return Column (modifier = Modifier.padding(5.dp), Arrangement.spacedBy(3.dp)) {
+    return Column(modifier = Modifier.padding(5.dp), Arrangement.spacedBy(3.dp)) {
         for (row in matrix) {
             run { generate_row(row) }
         }
