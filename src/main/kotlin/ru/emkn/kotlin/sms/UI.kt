@@ -102,7 +102,24 @@ class UI(private val state: MutableState<State>) {
     }
 
     @Composable
-    fun dist() = Text("Dis")
+    fun dist() {
+        val distances: List<String> = scanFile1("./distances.csv").toList()
+        val stateVertical = rememberScrollState(0)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(stateVertical)
+                .padding(end = 12.dp, bottom = 12.dp)
+        ) {
+            Column {
+                for (element in distances) {
+                    Row {
+                        Text(element)
+                    }
+                }
+            }
+        }
+    }
 
     @Composable
     fun comm() {
@@ -147,6 +164,14 @@ fun getTeamNames(): List<String> {
         ans.add(file.name.substring(0, file.name.length - 4))
     }
     return ans
+}
+
+fun scanFile1(fileName: String): Array<String> {
+    var fileArray: Array<String> = arrayOf()
+    for (line in File(fileName).readLines()) {
+        fileArray += line
+    }
+    return fileArray
 }
 
 /*fun getPeople(): List<Sportsman>{
