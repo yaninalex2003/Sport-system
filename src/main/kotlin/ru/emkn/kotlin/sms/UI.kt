@@ -206,6 +206,7 @@ class UI(private val state: MutableState<State>) {
             Row() {
                 Column {
                     for (but in buttons) {
+                        //Text()
                         Button(modifier = Modifier.width(240.dp),
                             colors = ButtonDefaults.buttonColors(backgroundColor = Red),
                             onClick = { state.value = State.Commands }) {
