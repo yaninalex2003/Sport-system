@@ -11,13 +11,9 @@ import java.io.File
 
 class ControlPoints(val groupname: String) {
     val files: List<File>
-        get() = run {
+        get() {
             val dir = File("./control_points/${groupname}")
-            if (dir.isDirectory) {
-                return dir.listFiles()?.toList() ?: listOf()
-            } else {
-                return listOf()
-            }
+            return dir.listFiles()?.toList() ?: listOf()
         }
 
     fun getGroup(): Group {
@@ -49,7 +45,7 @@ class ControlPoints(val groupname: String) {
                     .withIgnoreHeaderCase()
                     .withTrim()
             )
-            val person = finish.sportsmen.find { it.number == numberOfPerson } ?: Sportsman("five", "")
+            val person = finish.sportsmen.find { it.number == numberOfPerson }!!
             csvParser.forEach {
                 person.times.add(it.get(1))
             }

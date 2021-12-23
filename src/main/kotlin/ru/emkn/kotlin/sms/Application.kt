@@ -46,7 +46,7 @@ class Application(
         */
         val list: GroupsMap = mutableMapOf()
         groups.forEach { key, value ->
-            var counter = 0
+            var counter = 1
             val temp: ParticipantsList = mutableListOf()
             value.forEach {
                 val map = mutableMapOf("Номер" to "$counter")
