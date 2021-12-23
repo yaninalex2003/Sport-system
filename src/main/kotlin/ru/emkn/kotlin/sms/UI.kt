@@ -25,19 +25,19 @@ class UI(private val state: MutableState<State>) {
     fun navigation() = Row(Modifier.fillMaxWidth()) {
         Button(modifier = Modifier.width(240.dp),
             onClick = { state.value = State.Groups }) {
-            Text("Список групп")
+            Text("Группы")
+        }
+        Button(modifier = Modifier.width(240.dp),
+            onClick = { state.value = State.Commands }) {
+            Text("Команды")
+        }
+        Button(modifier = Modifier.width(240.dp),
+            onClick = { state.value = State.Participants }) {
+            Text("Участники")
         }
         Button(modifier = Modifier.width(240.dp),
             onClick = { state.value = State.Distance }) {
             Text("Список дистанций")
-        }
-        Button(modifier = Modifier.width(240.dp),
-            onClick = { state.value = State.Commands }) {
-            Text("Список команд")
-        }
-        Button(modifier = Modifier.width(240.dp),
-            onClick = { state.value = State.Participants }) {
-            Text("Список участников")
         }
         Button(modifier = Modifier.width(240.dp),
             onClick = { state.value = State.Marks }) {
@@ -205,12 +205,25 @@ class UI(private val state: MutableState<State>) {
             }
             Row() {
                 Column {
-                    for (but in buttons) {
-                        //Text()
-                        Button(modifier = Modifier.width(240.dp),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Red),
-                            onClick = { state.value = State.Commands }) {
-                            Text(but)
+                    buttons.forEach {
+                        Row {
+                            Text("  $it", modifier = Modifier.width(200.dp))
+                            Button(modifier = Modifier.width(240.dp),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = Red),
+                                onClick = {
+                                    state.value = State.Commands
+                                    but = it
+                                }) {
+                                Text("Список команды")
+                            }
+                            Button(modifier = Modifier.width(240.dp),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = Red),
+                                onClick = {
+                                    state.value = State.Commands
+                                    but = it
+                                }) {
+                                Text("Результат команды")
+                            }
                         }
                     }
                 }
