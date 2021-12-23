@@ -20,6 +20,7 @@ class UI(private val state: MutableState<State>) {
     var but = ""
     var dist = ""
     var import_var = "./applications"
+    var marks_var = "./control_points"
 
     @Composable
     fun navigation() = Row(Modifier.fillMaxWidth()) {
@@ -70,16 +71,6 @@ class UI(private val state: MutableState<State>) {
                 .padding(end = 12.dp, bottom = 12.dp)
         ) {
             Column {
-                for (but_name in buttons) {
-                    Button(modifier = Modifier.width(240.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Red),
-                        onClick = {
-                            state.value = State.GroupInfo
-                            but = but_name
-                        }) {
-                        Text(but_name)
-                    }
-                }
             }
         }
     }
@@ -193,16 +184,17 @@ class UI(private val state: MutableState<State>) {
     }
 
     private fun load() {
+        val dir_to = "./applications"
         val target = File(this.import_var)
         this.state.value = State.Marks
         this.state.value = State.Commands
         if (target.isDirectory) {
             target.listFiles()?.forEach {
-                if (it.extension == "csv") it.copyTo(File("./applications/${it.name}"))
+                if (it.extension == "csv") it.copyTo(File("${dir_to}/${it.name}"))
             } ?: ""
         }
         if (target.isFile && target.extension == "csv") {
-            target.copyTo(File("./applications/${target.name}"))
+            target.copyTo(File("${dir_to}/${target.name}"))
         }
     }
 
@@ -256,7 +248,36 @@ class UI(private val state: MutableState<State>) {
     }
 
     @Composable
-    fun marks() = Text("Marks")
+    fun marks() = Column () {
+        var text by rememberSaveable { mutableStateOf("") }
+        Row(modifier = Modifier.align(Alignment.Start).height(100.dp), Arrangement.spacedBy(10.dp)) {
+            TextField(
+                modifier = Modifier.fillMaxWidth(0.5f),
+                value = text,
+                onValueChange = {
+                    text = it
+                    marks_var = it
+                },
+                label = { Text("Path to CSV or directory") }
+            )
+            Button(onClick = { load_marks() }) { Text("Import") }
+        }
+        Row() {
+
+        }
+    }
+    fun load_marks() {
+        val root = File(marks_var)
+        if (root.isDirectory) {
+            root.listFiles().forEach { group ->
+                if (group.isDirectory) {
+                    group.listFiles()?.forEach {
+                        if (it.extension == "csv") it.copyTo(File("./control_points/${group.name}/${it.name}"))
+                    } ?: ""
+                }
+            }
+        }
+    }
 }
 
 fun getGroupNames(): List<String> {
@@ -284,17 +305,17 @@ fun scanFile1(fileName: String): Array<String> {
 }
 
 @Composable
-fun table(matrix: List<List<String>>) {
+fun table(matrix: List<List<Any>>) {
 
     @Composable
-    fun generate_row(row: List<String>) = Row(modifier = Modifier.padding(0.dp), Arrangement.spacedBy(0.dp)) {
+    fun generate_row(row: List<Any>) = Row(modifier = Modifier.padding(0.dp), Arrangement.spacedBy(0.dp)) {
         for (note in row) {
-            Text(note, modifier = Modifier.width(200.dp))
+            if (note is String) Text(note, modifier = Modifier.width((200*3/row.size).dp)) else note
         }
     }
     return Column(modifier = Modifier.padding(0.dp), Arrangement.spacedBy(0.dp)) {
         for (row in matrix) {
-            run { generate_row(row) }
+            generate_row(row)
         }
     }
 }
