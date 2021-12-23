@@ -11,10 +11,11 @@ import androidx.compose.ui.unit.dp
 import java.io.File
 
 enum class State {
-    Groups, Distance, Commands, Participants, Marks, GroupStart, GroupFinish, TeamInfo, DistanceInfo
+    Groups, Distance, Commands, Participants, Marks, GroupStart, GroupFinish, TeamInfo, DistanceInfo, TeamResult
 }
 
 class UI(private val state: MutableState<State>) {
+    var team=""
     var sort_key = 0
     var but = ""
     var dist = ""
@@ -57,6 +58,7 @@ class UI(private val state: MutableState<State>) {
             State.TeamInfo -> teamInfo(but)
             State.DistanceInfo -> distanceInfo(dist)
             State.GroupFinish -> groupFinish(but)
+            State.TeamResult -> teamResult(team)
         }
     }
 
@@ -219,8 +221,8 @@ class UI(private val state: MutableState<State>) {
                             Button(modifier = Modifier.width(240.dp),
                                 colors = ButtonDefaults.buttonColors(backgroundColor = Red),
                                 onClick = {
-                                    state.value = State.Commands
-                                    but = it
+                                    state.value = State.TeamResult
+                                    team = it
                                 }) {
                                 Text("Результат команды")
                             }
@@ -229,6 +231,12 @@ class UI(private val state: MutableState<State>) {
                 }
             }
         }
+    }
+
+    @Composable
+    fun teamResult(team:String){
+        val result: List<String> = scanFile1("./team_results/${team}").toList()
+
     }
 
     private fun load() {
