@@ -7,11 +7,13 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color.Companion.Red
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import java.io.File
+import javax.accessibility.AccessibleEditableText
 
 enum class State {
-    Groups, Distance, Commands, Participants, Marks, GroupStart, GroupFinish, TeamInfo, DistanceInfo
+    Groups, Distance, Commands, Participants, Marks, GroupInfo, TeamInfo, DistanceInfo
 }
 
 class UI(private val state: MutableState<State>) {
@@ -51,10 +53,9 @@ class UI(private val state: MutableState<State>) {
             State.Commands -> comm()
             State.Participants -> partic()
             State.Marks -> marks()
-            State.GroupStart -> groupStart(but)
+            State.GroupInfo -> groupInfo(but)
             State.TeamInfo -> teamInfo(but)
             State.DistanceInfo -> distanceInfo(dist)
-            State.GroupFinish -> groupFinish(but)
         }
     }
 
@@ -69,25 +70,14 @@ class UI(private val state: MutableState<State>) {
                 .padding(end = 12.dp, bottom = 12.dp)
         ) {
             Column {
-                buttons.forEach {
-                    Row{
-                        Text(it, modifier = Modifier.width(200.dp))
-                        Button(modifier = Modifier.width(240.dp),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Red),
-                            onClick = {
-                                state.value = State.GroupStart
-                                but = it
-                            }) {
-                            Text("Стартовый протокол")
-                        }
-                        Button(modifier = Modifier.width(240.dp),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Red),
-                            onClick = {
-                                state.value = State.GroupStart
-                                but = it
-                            }) {
-                            Text("Финишный результат")
-                        }
+                for (but_name in buttons) {
+                    Button(modifier = Modifier.width(240.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Red),
+                        onClick = {
+                            state.value = State.GroupInfo
+                            but = but_name
+                        }) {
+                        Text(but_name)
                     }
                 }
             }
@@ -95,32 +85,7 @@ class UI(private val state: MutableState<State>) {
     }
 
     @Composable
-    fun groupStart(but: String) {
-        if (ControlPoints(but).files.isEmpty()) {
-            Text("Файл пуст")
-            return
-        }
-        val people = ControlPoints(but).makeFinishResults()
-        val stateVertical = rememberScrollState(0)
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(stateVertical)
-                .padding(end = 12.dp, bottom = 12.dp)
-        ) {
-            Column {
-                for (chel in people.sportsmen) {
-                    Row {
-                        Text(chel.name)
-                        Text(chel.surname)
-                    }
-                }
-            }
-        }
-    }
-
-    @Composable
-    fun groupFinish(but: String) {
+    fun groupInfo(but: String) {
         if (ControlPoints(but).files.isEmpty()) {
             Text("Файл пуст")
             return
