@@ -17,4 +17,6 @@ class Sportsman(var name: String, var surname: String) {
     lateinit var finishTime: String
 
     var finishTimeInSeconds: Int = 0
+
+    var result: Int = 0
 }

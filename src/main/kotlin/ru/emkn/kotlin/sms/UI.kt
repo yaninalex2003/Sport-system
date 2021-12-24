@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import java.io.File
 
 enum class State {
-    Groups, Distance, Commands, Participants, Marks, GroupStart, GroupFinish, TeamPeople, DistanceInfo
+    Groups, Distance, Commands, Participants, Marks, GroupStart, GroupFinish, TeamPeople, DistanceInfo, TeamResult
 }
 
 @ExperimentalGraphicsApi
@@ -67,6 +67,7 @@ class UI(private val state: MutableState<State>) {
             State.DistanceInfo -> distanceInfo(dist)
             State.GroupFinish -> groupFinish(but)
             State.TeamPeople -> teamPeople(but)
+            State.TeamResult -> teamResults(but)
         }
     }
 
@@ -250,7 +251,7 @@ class UI(private val state: MutableState<State>) {
                                 contentColor = Color.hsv(0f, 0f, 0.13f)
                             ),
                             onClick = {
-                                state.value = State.TeamPeople
+                                state.value = State.TeamResult
                                 but = it
                             }) {
                             Text("Результат команды")
@@ -283,7 +284,31 @@ class UI(private val state: MutableState<State>) {
                 sportsmenInOneTeamAsListOfList(but)
             )
         }
+    }
 
+    @Composable
+    fun teamResults(but: String) {
+        val stateVertical = rememberScrollState(0)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(stateVertical)
+                .padding(end = 12.dp, bottom = 12.dp),
+            Arrangement.spacedBy(7.dp)
+        ) {
+            Text("  СУММАРНЫЙ РЕЗУЛЬТАТ = ${teamResult(but)}", color = White)
+            Row {
+                Text("  ГРУППА", modifier = Modifier.width(200.dp), color = White)
+                Text("  ФАМИЛИЯ", modifier = Modifier.width(200.dp), color = White)
+                Text("  ИМЯ", modifier = Modifier.width(200.dp), color = White)
+                Text("  ГОД РОЖДЕНИЯ", modifier = Modifier.width(200.dp), color = White)
+                Text("  РАЗРЯД", modifier = Modifier.width(200.dp), color = White)
+                Text("  РЕЗУЛЬТАТ", modifier = Modifier.width(200.dp), color = White)
+            }
+            table(
+                sportsmenInTeamResultsFileAsListOfList(but)
+            )
+        }
     }
 
     private fun load() {
@@ -445,30 +470,6 @@ class UI(private val state: MutableState<State>) {
             println(e.message)
         }
     }
-}
-
-fun getGroupNames(): List<String> {
-    val ans = mutableListOf<String>()
-    for (file in File("./groups").listFiles()?.toList() ?: listOf()) {
-        ans.add(file.name.substring(0, file.name.length - 4))
-    }
-    return ans
-}
-
-fun getTeamNames(): List<String> {
-    val ans = mutableListOf<String>()
-    for (file in File("./applications").listFiles().toList()) {
-        ans.add(file.name.substring(0, file.name.length - 4))
-    }
-    return ans
-}
-
-fun scanFile1(fileName: String): List<String> {
-    val fileList: MutableList<String> = mutableListOf()
-    for (line in File(fileName).readLines()) {
-        fileList.add(line)
-    }
-    return fileList
 }
 
 @OptIn(ExperimentalGraphicsApi::class)

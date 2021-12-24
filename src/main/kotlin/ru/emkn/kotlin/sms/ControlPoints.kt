@@ -1,12 +1,9 @@
 package ru.emkn.kotlin.sms
 
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVRecord
-import org.jetbrains.skia.paragraph.Direction
 import java.io.File
 
 class ControlPoints(val groupname: String) {
@@ -120,19 +117,19 @@ class ControlPoints(val groupname: String) {
             if (star.size==0){
                 star.add("0")
             }
-            var lirst: MutableList<String> = star[0].split(",").toList().toMutableList()
+            val list: MutableList<String> = star[0].split(",").toList().toMutableList()
             for(person in result[key]!!){
-                if (lirst[lirst.size-1]==""){
-                    lirst[lirst.size-1]="0"
+                if (list[list.size-1]==""){
+                    list[list.size-1]="0"
                 }
-                lirst[lirst.size-1] = (lirst[lirst.size-1].toInt()+maxOf(0, (100 * (2F - timeToSeconds(person.finishTime) / winnerTime.toFloat())).toInt())).toString()
+                list[list.size-1] = (list[list.size-1].toInt()+maxOf(0, (100 * (2F - timeToSeconds(person.finishTime) / winnerTime.toFloat())).toInt())).toString()
             }
             val file =
                 File("./team_results/${key}_result")
             val writer = file.bufferedWriter()
             val csvPrinter = CSVPrinter(
                 writer, CSVFormat.DEFAULT
-                    .withHeader(key,"","","","", lirst[lirst.size-1])
+                    .withHeader(list[list.size-1])
             )
             var number = 1
             for (element in 1 until star.size){
@@ -234,6 +231,60 @@ fun allSportsmenAsListOfList(): List<List<String>>{
         ans.add(listOf(it.groupName, it.name, it.surname, it.team, it.rank, it.birthday.toString()))
     }
     return ans
+}
+
+fun makeSportsmanFromTeamResult(line: CSVRecord): Sportsman{
+    val name = line.get(1)
+    val surname = line.get(2)
+    val newSportsman = Sportsman(name, surname)
+    newSportsman.birthday = line.get(4).toInt()
+    newSportsman.rank = line.get(3).ifEmpty { "-" }
+    newSportsman.groupName = line.get(0)
+    newSportsman.result = line.get(5).toInt()
+    return newSportsman
+}
+
+fun sportsmenInTeamResultsFileAsListOfList(name: String): List<List<String>>{
+    val file = File("./team_results/${name}_result")
+    val reader = file.bufferedReader()
+    val csvParser = CSVParser(
+        reader, CSVFormat.DEFAULT
+            .withIgnoreHeaderCase()
+            .withFirstRecordAsHeader()
+            .withTrim()
+    )
+    val ans = mutableListOf<List<String>>()
+    csvParser.forEach {
+        val person = makeSportsmanFromTeamResult(it)
+        ans.add(listOf(person.groupName, person.surname, person.name, person.birthday.toString(), person.rank, person.result.toString()))
+    }
+    return ans
+}
+
+fun teamResult(fileName: String) = File("./team_results/${fileName}_result").readLines()[0]
+
+fun getGroupNames(): List<String> {
+    val ans = mutableListOf<String>()
+    for (file in File("./groups").listFiles()?.toList() ?: listOf()) {
+        ans.add(file.name.substring(0, file.name.length - 4))
+    }
+    return ans
+}
+
+fun getTeamNames(): List<String> {
+    val ans = mutableListOf<String>()
+    for (file in File("./applications").listFiles().toList()) {
+        ans.add(file.name.substring(0, file.name.length - 4))
+    }
+    return ans
+}
+
+fun scanFile1(fileName: String): List<String> {
+    val fileList: MutableList<String> = mutableListOf()
+    for (line in File(fileName).readLines()) {
+        fileList.add(line)
+    }
+    return fileList
 }
 
 

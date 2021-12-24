@@ -25,7 +25,7 @@ import androidx.compose.ui.window.rememberWindowState
 
 @OptIn(ExperimentalGraphicsApi::class)
 fun main() = application {
-    /*run{Application().create()}
+    //run{Application().create()}
     Window(
         onCloseRequest = ::exitApplication,
         title = "Sport Management System Yanix",
@@ -39,14 +39,13 @@ fun main() = application {
                 ui.innerBody()
             }
         }
-    }*/
-    val res = getGroupNames()
+    }
+    /*val res = getGroupNames()
     val files = File("./team_results").listFiles()?.toList() ?: listOf()
     files.forEach{
         it.writeText("")
     }
     for (it in res){
         ControlPoints(it).getTeamResults()
-    }
-
+    }*/
 }
