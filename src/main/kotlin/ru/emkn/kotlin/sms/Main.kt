@@ -25,7 +25,7 @@ import androidx.compose.ui.window.rememberWindowState
 
 @OptIn(ExperimentalGraphicsApi::class)
 fun main() = application {
-    //run{Application().create()}
+    /*run{Application().create()}
     Window(
         onCloseRequest = ::exitApplication,
         title = "Sport Management System Yanix",
@@ -39,6 +39,10 @@ fun main() = application {
                 ui.innerBody()
             }
         }
+    }*/
+    val res = getGroupNames()
+    for (it in res){
+        ControlPoints(it).getTeamResults()
     }
-    //ControlPoints("Мстуд").getTeamResults()
+
 }

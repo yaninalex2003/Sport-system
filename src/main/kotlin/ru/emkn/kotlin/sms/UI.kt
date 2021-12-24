@@ -402,7 +402,10 @@ class UI(private val state: MutableState<State>) {
                 )
                 Button(onClick = { load_marks() }) { Text("Import", color = White) }
                 Button(onClick = {
-                    res.forEach { ControlPoints(it).makeFinishResultsInFile() }
+                    res.forEach {
+                        ControlPoints(it).makeFinishResultsInFile()
+                        ControlPoints(it).getTeamResults()
+                    }
                     state.value = State.Groups
                 }) { Text("Results!", color = White) }
             }
@@ -456,12 +459,12 @@ fun getTeamNames(): List<String> {
     return ans
 }
 
-fun scanFile1(fileName: String): Array<String> {
-    var fileArray: Array<String> = arrayOf()
+fun scanFile1(fileName: String): List<String> {
+    val fileList: MutableList<String> = mutableListOf()
     for (line in File(fileName).readLines()) {
-        fileArray += line
+        fileList.add(line)
     }
-    return fileArray
+    return fileList
 }
 
 @OptIn(ExperimentalGraphicsApi::class)

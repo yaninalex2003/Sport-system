@@ -116,23 +116,39 @@ class ControlPoints(val groupname: String) {
         val winnerTime = timeToSeconds(finish.sportsmen[0].finishTime)
         val result = finish.sportsmen.groupBy { it.team }
         for (key in result.keys) {
+            val star:MutableList<String> = scanFile1("./team_results/${key}_result").toMutableList()
+            if (star.size==0){
+                star.add("0")
+            }
+            var lirst: MutableList<String> = star[0].split(",").toList().toMutableList()
+            for(person in result[key]!!){
+                if (lirst[lirst.size-1]==""){
+                    lirst[lirst.size-1]="0"
+                }
+                lirst[lirst.size-1] = (lirst[lirst.size-1].toInt()+maxOf(0, (100 * (2F - timeToSeconds(person.finishTime) / winnerTime.toFloat())).toInt())).toString()
+            }
             val file =
                 File("./team_results/${key}_result")
             val writer = file.bufferedWriter()
             val csvPrinter = CSVPrinter(
                 writer, CSVFormat.DEFAULT
-                    .withHeader(key, "", "", "", "", "", "")
+                    .withHeader(key,"","","","", lirst[lirst.size-1])
             )
             var number = 1
+            for (element in 1 until star.size){
+                val str=star[element].split(",").toList()
+                csvPrinter.printRecord(str)
+            }
+
             for (person in result[key]!!) {
                 csvPrinter.printRecord(
                     listOf(
-                        number,
+
                         person.groupName,
-                        person.number,
                         person.surname,
                         person.name,
                         person.rank,
+                        person.birthday,
                         maxOf(0, (100 * (2F - timeToSeconds(person.finishTime) / winnerTime.toFloat())).toInt())
                     )
                 )
@@ -220,4 +236,10 @@ fun allSportsmenAsListOfList(): List<List<String>>{
     }
     return ans
 }
+
+
+
+
+
+
 
