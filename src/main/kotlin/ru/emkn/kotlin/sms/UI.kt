@@ -402,6 +402,10 @@ class UI(private val state: MutableState<State>) {
                 )
                 Button(onClick = { load_marks() }) { Text("Import", color = White) }
                 Button(onClick = {
+                    val files = File("./team_results").listFiles()?.toList() ?: listOf()
+                    files.forEach{
+                        it.writeText("")
+                    }
                     res.forEach {
                         ControlPoints(it).makeFinishResultsInFile()
                         ControlPoints(it).getTeamResults()

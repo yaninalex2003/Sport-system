@@ -143,7 +143,6 @@ class ControlPoints(val groupname: String) {
             for (person in result[key]!!) {
                 csvPrinter.printRecord(
                     listOf(
-
                         person.groupName,
                         person.surname,
                         person.name,

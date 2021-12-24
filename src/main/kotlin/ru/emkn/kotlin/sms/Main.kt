@@ -41,6 +41,10 @@ fun main() = application {
         }
     }*/
     val res = getGroupNames()
+    val files = File("./team_results").listFiles()?.toList() ?: listOf()
+    files.forEach{
+        it.writeText("")
+    }
     for (it in res){
         ControlPoints(it).getTeamResults()
     }
